@@ -1,0 +1,8 @@
+classdef JSSPActivity
+    properties
+    end
+    
+    methods
+        function activityObj = JSSPActivity()
+    end
+end

@@ -1,0 +1,27 @@
+classdef JSSPJob
+    properties       
+        activities
+    end
+    
+    properties (Dependent)
+        nbActivities        
+    end
+    
+    methods
+        function jobObj = JSSPJob(machIDs, procTimes)
+            if nargin > 0
+                nbAct = length(machIDs);
+                jobObj.activities(nbAct) = nan(1,nbAct);
+                for idx = 1 : nbAct
+                    jobObj.activities(idx) = JSSPActivity(machIDs(idx),procTimes(idx));
+                end                
+            end
+        end
+        
+        function nbActivities = get.nbActivities(obj)
+            nbActivities = length(obj.activities);
+        end
+        
+        
+    end
+end
