@@ -9,8 +9,11 @@ classdef JSSPInstance < handle
         solution
         instanceData = JSSPJob();
         pendingData = JSSPJob();
-        features
-        upcomingActivities = JSSPActivity(nan,nan);
+        features = 'Not yet implemented. Should be updated with empty feature vector';        
+    end
+    
+    properties (Dependent)
+        upcomingActivities
     end
     
     % ----- ---------------------------------------------------- -----
@@ -36,6 +39,8 @@ classdef JSSPInstance < handle
                     instance.pendingData(idx) = ...
                         JSSPJob(instanceData(idx,:,2),instanceData(idx,:,1),idx);
                 end
+                instance.status = 'Pending';
+                instance.solution = JSSPSchedule(instance.nbMachines);                
             end
         end
         
@@ -55,5 +60,15 @@ classdef JSSPInstance < handle
 %         function disp(obj, varargin)
 %             disp('Not yet implemented...')
 %         end
+
+        % ----- ---------------------------------------------------- -----
+        % Methods for dependent properties
+        % ----- ---------------------------------------------------- -----
+        function activities = get.upcomingActivities(obj)
+            activities(obj.nbJobs) = obj.pendingData(end).activities(1);
+            for idx = 1 : obj.nbJobs-1
+                activities(idx) = obj.pendingData(idx).activities(1);
+            end
+        end
     end
 end
