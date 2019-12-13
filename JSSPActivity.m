@@ -1,4 +1,4 @@
-classdef JSSPActivity
+classdef JSSPActivity < handle
     properties
         machineID
         processingTime
@@ -10,6 +10,7 @@ classdef JSSPActivity
                 nbAct = length(machID);
                 activityObj(nbAct) = activityObj;
                 for idx = 1 : nbAct
+                    activityObj(idx) = activityObj;
                     activityObj(idx).machineID = machID(idx);
                     activityObj(idx).processingTime = procTime(idx);                
                 end                
