@@ -1,6 +1,7 @@
-classdef JSSPJob
+classdef JSSPJob < handle
     properties       
         activities
+        jobID = nan;
     end
     
     properties (Dependent)
@@ -8,15 +9,14 @@ classdef JSSPJob
     end
     
     methods
-        function jobObj = JSSPJob(machIDs, procTimes)
-            if nargin > 0
-                nbAct = length(machIDs);
-                jobObj.activities(nbAct) = nan(1,nbAct);
-                for idx = 1 : nbAct
-                    jobObj.activities(idx) = JSSPActivity(machIDs(idx),procTimes(idx));
-                end                
+        function jobObj = JSSPJob(machIDs, procTimes, jobID)
+            if nargin > 0                
+                jobObj.activities = JSSPActivity(machIDs,procTimes);
+                jobObj.jobID = jobID;
             end
         end
+        
+        function poppedJob = popJob(obj)
         
         function nbActivities = get.nbActivities(obj)
             nbActivities = length(obj.activities);

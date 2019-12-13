@@ -1,0 +1,90 @@
+classdef JSSPSchedule < handle  % Only one schedule should be around
+    properties               
+        nbMachines
+        schedule
+    end        
+    
+    properties (Dependent)
+        makespan;
+    end
+    
+    methods
+        % ----- ---------------------------------------------------- -----
+        % Constructor
+        % ----- ---------------------------------------------------- -----
+        function jobObj = JSSPSchedule(nbMachines)
+            if nargin > 0                
+                jobObj.nbMachines = nbMachines;
+                jobObj.schedule = zeros(nbMachines,1);
+            end
+        end
+        
+        % ----- ---------------------------------------------------- -----
+        % General methods
+        % ----- ---------------------------------------------------- -----
+        %function timeIndex = getTimeslot(obj, machineID, activityLength)            
+        function timeIndex = getTimeslot(obj, targetJob)            
+            if isempty([targetJob.activities.machineID])
+                error('Error! Job has been completely scheduled... Aborting!')                
+            end
+            machineID = targetJob.activities(1).machineID;
+            activityLength = targetJob.activities(1).processingTime;
+            selectedMachine = obj.schedule(machineID,:);
+            if obj.makespan == 1 % Fix for when the schedule is too young
+                if selectedMachine == 0, timeIndex = 1;
+                else, timeIndex = 2; 
+                end
+                return
+            elseif targetJob.lastScheduledTime > obj.makespan
+                timeIndex = targetJob.lastScheduledTime;
+                return
+            else                
+                zerosIdx = selectedMachine(targetJob.lastScheduledTime:end) == 0; % Normalize scheduleIdentify empty spaces
+                diffIdx = diff(zerosIdx);
+                startIdx = find(diffIdx==1); % Identify start of zero regions
+                endIdx = find(diffIdx==-1); % Identify end of zero regions
+                if isempty(startIdx) && isempty(endIdx) % All full or all empty
+                    if selectedMachine(1) == 0, timeIndex = 1; % Empty,                         
+                    else, timeIndex = obj.makespan + 1; % Full
+                    end
+                    return
+                elseif isempty(startIdx), startIdx = 0; 
+                elseif isempty(endIdx), timeIndex = startIdx(1)+1; return
+                end
+                if endIdx(1) < startIdx(1), startIdx = [0 startIdx]; end % Correct zero start
+                if endIdx(end) < startIdx(end), endIdx = [endIdx startIdx(end)+activityLength]; end % Correct zero end
+                for idx = 1:length(startIdx)      % This needs completion...
+                    if endIdx(idx)-startIdx(idx) >= activityLength % Enough space?
+                        timeIndex = startIdx(idx)+1; % +1 because of diff offset
+                        return
+                    end
+                end
+                timeIndex = obj.makespan+1; % If full, set at end of schedule
+            end
+        end
+        
+        function scheduleJob(obj, targetJob, timeslot)
+            selAct = targetJob.popActivity();
+            machineID = selAct.machineID;
+            activityLength = selAct.processingTime;
+            obj.schedule(machineID, timeslot:timeslot+activityLength-1) = targetJob.jobID;            
+            targetJob.updateLastActivity(selAct, timeslot+activityLength);
+        end
+        
+        % ----- ---------------------------------------------------- -----
+        % Methods for overloading functionality
+        % ----- ---------------------------------------------------- -----
+        function plot(varargin)
+            disp('Not yet implemented...')
+        end
+        
+        % ----- ---------------------------------------------------- -----
+        % Methods for dependent properties
+        % ----- ---------------------------------------------------- -----
+        function makespan = get.makespan(obj)
+            makespan = size(obj.schedule,2);
+        end
+        
+        
+    end
+end
