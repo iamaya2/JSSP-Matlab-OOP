@@ -53,7 +53,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                     end
                     return
                 elseif isempty(startIdx), startIdx = 0; 
-                elseif isempty(endIdx), timeIndex = startIdx(1)+1; return
+                elseif isempty(endIdx), timeIndex = startIdx(1)+fixedStart; return
                 end
                 if endIdx(1) < startIdx(1), startIdx = [0 startIdx]; end % Correct zero start
                 if endIdx(end) < startIdx(end), endIdx = [endIdx startIdx(end)+activityLength]; end % Correct zero end

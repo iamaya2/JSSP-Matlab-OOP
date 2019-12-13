@@ -1,0 +1,48 @@
+classdef JSSPInstance < handle
+    % ----- ---------------------------------------------------- -----
+    %                       Properties
+    % ----- ---------------------------------------------------- -----
+    properties
+        nbJobs
+        nbMachines
+        status = 'Undefined';
+        solution
+        instanceData
+        pendingData
+        features
+        upcomingActivities = JSSPActivity(nan,nan);
+    end
+    
+    % ----- ---------------------------------------------------- -----
+    %                       Methods
+    % ----- ---------------------------------------------------- -----
+    methods
+        % ----- ---------------------------------------------------- -----
+        % Constructor
+        % ----- ---------------------------------------------------- -----
+        function instance = JSSPInstance(instanceData)
+            % Function for creating the instance object
+            % instanceData: nbJobs*nbMachines*2 array. First layer:
+            % Processing times. Second layer: Machine sequence
+            [instance.nbJobs, instance.nbMachines] = size(instanceData
+            instanceData() = ;
+        end
+        
+        % ----- ---------------------------------------------------- -----
+        % Job scheduler
+        % ----- ---------------------------------------------------- -----
+        function scheduleJob(obj, jobID)
+        end
+        
+        % ----- ---------------------------------------------------- -----
+        % Methods for overloading functionality
+        % ----- ---------------------------------------------------- -----
+        function plot(obj, varargin)
+            disp('Not yet implemented...')            
+        end
+        
+        function disp(obj, varargin)
+            disp('Not yet implemented...')            
+        end
+    end
+end
