@@ -1,6 +1,6 @@
 classdef JSSPJob < handle
     properties       
-        activities
+        activities = JSSPActivity(nan,nan);
         jobID = nan;
         lastScheduledActivity
         lastScheduledTime = 1;
@@ -12,8 +12,15 @@ classdef JSSPJob < handle
     
     methods
         function jobObj = JSSPJob(machIDs, procTimes, jobID)
-            if nargin > 0                
-                jobObj.activities = JSSPActivity(machIDs,procTimes);
+            if nargin > 0        
+                nbAct = length(machIDs);
+                jobObj.activities(nbAct) = JSSPActivity(machIDs(end),procTimes(end));
+                for idx = 1 : nbAct-1
+                    jobObj.activities(idx) = JSSPActivity(machIDs(idx),procTimes(idx));
+%                     jobObj.activities(idx).machineID = machID(idx);
+%                     jobObj.activities(idx).processingTime = procTime(idx);                
+                end                
+%                 jobObj.activities = JSSPActivity(machIDs,procTimes);
                 jobObj.jobID = jobID;
             end
         end

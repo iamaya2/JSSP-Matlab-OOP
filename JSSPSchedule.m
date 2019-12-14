@@ -1,6 +1,8 @@
+%% P2
+% Comentar clase acá
 classdef JSSPSchedule < handle  % Only one schedule should be around
     properties               
-        nbMachines
+        nbMachines % Comentar propiedades así...
         schedule
     end        
     
@@ -51,13 +53,13 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                     end
                     return
                 elseif isempty(startIdx), startIdx = 0; 
-                elseif isempty(endIdx), timeIndex = startIdx(1)+1; return
+                elseif isempty(endIdx), timeIndex = startIdx(1)+fixedStart; return
                 end
                 if endIdx(1) < startIdx(1), startIdx = [0 startIdx]; end % Correct zero start
                 if endIdx(end) < startIdx(end), endIdx = [endIdx startIdx(end)+activityLength]; end % Correct zero end
                 for idx = 1:length(startIdx)      % This needs completion...
                     if endIdx(idx)-startIdx(idx) >= activityLength % Enough space?
-                        timeIndex = startIdx(idx)+1; % +1 because of diff offset
+                        timeIndex = startIdx(idx)+fixedStart; % +1 because of diff offset
                         return
                     end
                 end
@@ -65,7 +67,10 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             end
         end
         
+        
         function scheduleJob(obj, targetJob, timeslot)
+            % Resumen: Comentar métodos así...
+            % Extendido: Segunda línea del comentario
             selAct = targetJob.popActivity();
             machineID = selAct.machineID;
             activityLength = selAct.processingTime;
@@ -78,7 +83,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
 %             disp('Not yet implemented...')
-            heatmap(obj.schedule)
+            heatmap(obj.schedule);
         end
         
         % ----- ---------------------------------------------------- -----
