@@ -5,13 +5,13 @@ function performanceData = EvaluateUPSOtoJSSP(UPSOArray, nbJobs)
 JSSPInstanceData = UPSOtoJSSP(UPSOArray, nbJobs); % Translate
 JSSPInstanceData2 = UPSOtoJSSP(UPSOArray, nbJobs); % Temp... just for testing
 % Solve
-for idx = 1 : nbJobs
+for idx = 1 : nbJobs % Schedules from first to last
     for idy = 1 : length(JSSPInstanceData.instanceData(idx).activities)
         JSSPInstanceData.scheduleJob(idx); % Replace with real heuristic
     end
 end
 
-for idx = nbJobs : -1 : 1
+for idx = nbJobs : -1 : 1 % Schedules from last to first
     for idy = 1 : length(JSSPInstanceData.instanceData(idx).activities)
         JSSPInstanceData2.scheduleJob(idx); % Replace with real heuristic
     end
