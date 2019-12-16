@@ -3,13 +3,14 @@
 classdef JSSPSchedule < handle  % Only one schedule should be around
     properties               
         nbMachines % number of machines
-        schedule %itinerary 
+        schedule = JSSPMachine; %itinerary matrix of activities. Rows: Machines. Columns: Scheduled activities
         nbMaxJobs = nan;
         schColorMap
     end        
     
     properties (Dependent)
         makespan % The time taken to complete all jobs
+%         emptyRangeInMachine
     end
     
     methods
@@ -24,7 +25,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             if nargin > 0                
                 jobObj.nbMachines = nbMachines;
                 jobObj.nbMaxJobs = nbMaxJobs;
-                jobObj.schedule = zeros(nbMachines,1);
+                jobObj.schedule(nbMachines,1) = JSSPMachine; % Empty column of actitivities
                 jobObj.schColorMap = [.92 .97 .97; parula(nbMaxJobs)];
             end
         end
@@ -39,17 +40,25 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             end
             machineID = targetJob.activities(1).machineID;
             activityLength = targetJob.activities(1).processingTime;
-            selectedMachine = obj.schedule(machineID,:);
-            if obj.makespan == 1 % Fix for when the schedule is too young
-                if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
-                else, timeIndex = 2; 
-                end
+            selectedMachine = obj.schedule(machineID); % Machine object
+            currMakespan = obj.makespan;
+            if isnan(currMakespan) % Fix for when the schedule is too young
+%                 if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
+%                 else, timeIndex = 2; 
+%                 end
+                timeIndex = 0;
                 return
-            elseif targetJob.lastScheduledTime > obj.makespan
+            elseif targetJob.lastScheduledTime > currMakespan % Expansion required
                 timeIndex = targetJob.lastScheduledTime;
                 return
             else                
-                fixedStart = targetJob.lastScheduledTime;
+                fixedStart = targetJob.lastScheduledTime; % Search starting point
+                
+                
+                emptyRanges =  selectedMachine.emptyRangeInMachine;
+                availableGaps = diff(emptyRanges);
+                
+                
                 zerosIdx = selectedMachine(fixedStart:end) == 0; % Normalize scheduleIdentify empty spaces
                 diffIdx = diff(zerosIdx);
                 startIdx = find(diffIdx==1); % Identify start of zero regions
@@ -57,7 +66,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                 if isempty(startIdx) && isempty(endIdx) % All full or all empty
 %                     if selectedMachine(1) == 0, timeIndex = 1; % Empty,                         
                     if selectedMachine(fixedStart) == 0, timeIndex = fixedStart; % Empty,
-                    else, timeIndex = obj.makespan + 1; % Full
+                    else, timeIndex = currMakespan + 1; % Full
                     end
                     return
                 elseif isempty(startIdx), startIdx = 0; 
@@ -71,14 +80,46 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                         return
                     end
                 end
-                timeIndex = obj.makespan+1; % If full, set at end of schedule
+                timeIndex = currMakespan+1; % If full, set at end of schedule
             end
+%             if obj.makespan == 1 % Fix for when the schedule is too young
+%                 if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
+%                 else, timeIndex = 2; 
+%                 end
+%                 return
+%             elseif targetJob.lastScheduledTime > obj.makespan
+%                 timeIndex = targetJob.lastScheduledTime;
+%                 return
+%             else                
+%                 fixedStart = targetJob.lastScheduledTime;
+%                 zerosIdx = selectedMachine(fixedStart:end) == 0; % Normalize scheduleIdentify empty spaces
+%                 diffIdx = diff(zerosIdx);
+%                 startIdx = find(diffIdx==1); % Identify start of zero regions
+%                 endIdx = find(diffIdx==-1); % Identify end of zero regions
+%                 if isempty(startIdx) && isempty(endIdx) % All full or all empty
+% %                     if selectedMachine(1) == 0, timeIndex = 1; % Empty,                         
+%                     if selectedMachine(fixedStart) == 0, timeIndex = fixedStart; % Empty,
+%                     else, timeIndex = obj.makespan + 1; % Full
+%                     end
+%                     return
+%                 elseif isempty(startIdx), startIdx = 0; 
+%                 elseif isempty(endIdx), timeIndex = startIdx(1)+fixedStart; return
+%                 end
+%                 if endIdx(1) < startIdx(1), startIdx = [0 startIdx]; end % Correct zero start
+%                 if endIdx(end) < startIdx(end), endIdx = [endIdx startIdx(end)+activityLength]; end % Correct zero end
+%                 for idx = 1:length(startIdx)      % This needs completion...
+%                     if endIdx(idx)-startIdx(idx) >= activityLength % Enough space?
+%                         timeIndex = startIdx(idx)+fixedStart; % +1 because of diff offset
+%                         return
+%                     end
+%                 end
+%                 timeIndex = obj.makespan+1; % If full, set at end of schedule
+%             end
         end
         
         
         function scheduleJob(obj, targetJob, timeslot)
-            % Schedule next Job in agenda
-       
+            % Schedule next Job in agenda       
             selAct = targetJob.popActivity();
             machineID = selAct.machineID;
             activityLength = selAct.processingTime;
@@ -111,9 +152,17 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % ----- ---------------------------------------------------- -----
         function makespan = get.makespan(obj)
             %Counting the number of columns to obtain the makespan
-            makespan = size(obj.schedule,2);
-        end
-        
+%             makespan = size(obj.schedule,2);
+            
+
+%             tempVals = zeros(obj.nbMachines,1);
+%             for idx = 1:obj.nbMachines
+%                 thisObj = obj.schedule(idx,:);
+%                 tempVals(idx) = thisObj(end).endTime;
+%             end
+%             makespan = max(tempVals);
+                makespan = max([obj.schedule(:).makespan]);
+        end               
         
     end
 end
