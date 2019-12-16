@@ -73,8 +73,8 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         
         
         function scheduleJob(obj, targetJob, timeslot)
-            % Schedule next Job in agenda
-       
+            % Resumen: Comentar métodos así...
+            % Extendido: Segunda línea del comentario
             selAct = targetJob.popActivity();
             machineID = selAct.machineID;
             activityLength = selAct.processingTime;
@@ -86,7 +86,6 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % Methods for overloading functionality
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
-            %plotting the schedule representation
 %             disp('Not yet implemented...')
             heatmap(obj.schedule);
         end
@@ -95,7 +94,6 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----
         function makespan = get.makespan(obj)
-            %Counting the number of columns to obtain the makespan
             makespan = size(obj.schedule,2);
         end
         
