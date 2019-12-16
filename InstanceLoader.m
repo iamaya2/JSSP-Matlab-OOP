@@ -12,8 +12,5 @@ end
 
 end
 %%
-function [P, M] = instancerdgenerator(nbJobs, nbMachines,maxPT)
-P = randi(maxPT,nbJobs,nbMachines);
-M = randi(nbMachines, nbJobs, nbMachines); 
-end 
+
 
