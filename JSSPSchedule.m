@@ -4,6 +4,8 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
     properties               
         nbMachines % number of machines
         schedule %itinerary 
+        nbMaxJobs = nan;
+        schColorMap
     end        
     
     properties (Dependent)
@@ -14,14 +16,16 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % ----- ---------------------------------------------------- -----
         % Constructor
         % ----- ---------------------------------------------------- -----
-        function jobObj = JSSPSchedule(nbMachines)
+        function jobObj = JSSPSchedule(nbMachines, nbMaxJobs)
             %Creating an empty schedule
             %This function assign to the object job the number of machines
             %avaiable and creates an empty schedule of size equal to the
             %number of machines
             if nargin > 0                
                 jobObj.nbMachines = nbMachines;
+                jobObj.nbMaxJobs = nbMaxJobs;
                 jobObj.schedule = zeros(nbMachines,1);
+                jobObj.schColorMap = [.92 .97 .97; parula(nbMaxJobs)];
             end
         end
         
@@ -37,7 +41,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             activityLength = targetJob.activities(1).processingTime;
             selectedMachine = obj.schedule(machineID,:);
             if obj.makespan == 1 % Fix for when the schedule is too young
-                if selectedMachine == 0, timeIndex = 1;
+                if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
                 else, timeIndex = 2; 
                 end
                 return
@@ -88,7 +92,18 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         function plot(obj, varargin)
             %plotting the schedule representation
 %             disp('Not yet implemented...')
-            heatmap(obj.schedule);
+%             heatmap(obj.schedule); % temp... change this to make similar effect with decimal values            
+            figure, colormap(obj.schColorMap)
+            axis([-0.1 obj.makespan+0.1 -obj.nbMachines-0.1 0.1])
+            set(gca,'CLim',[0 obj.nbMaxJobs]);            
+            colorbar('Ticks', 0:obj.nbMaxJobs) % Create colorbar
+            hold on
+            boxwidth = 1;
+            for idx = 1 : obj.makespan
+                for idy = 1 : obj.nbMachines
+                    rectangle('Position', [idx-1 -idy boxwidth boxwidth], 'FaceColor', obj.schColorMap(1+obj.schedule(idy,idx),:))
+                end
+            end
         end
         
         % ----- ---------------------------------------------------- -----

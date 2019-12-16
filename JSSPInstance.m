@@ -28,7 +28,8 @@ classdef JSSPInstance < handle
             % instanceData: nbJobs*nbMachines*2 array. First layer:
             % Processing times. Second layer: Machine sequence
             if nargin > 0
-                [instance.nbJobs, instance.nbMachines] = size(instanceData(:,:,1));
+                [instance.nbJobs, ~] = size(instanceData(:,:,1));
+                instance.nbMachines = max(max(instanceData(:,:,2)));
                 instance.instanceData(instance.nbJobs) = ...
                     JSSPJob(instanceData(end,:,2),instanceData(end,:,1),instance.nbJobs);
                 instance.pendingData(instance.nbJobs) = ...
@@ -40,7 +41,7 @@ classdef JSSPInstance < handle
                         JSSPJob(instanceData(idx,:,2),instanceData(idx,:,1),idx);
                 end
                 instance.status = 'Pending';
-                instance.solution = JSSPSchedule(instance.nbMachines);                
+                instance.solution = JSSPSchedule(instance.nbMachines, instance.nbJobs);                
             end
         end
         
@@ -48,13 +49,18 @@ classdef JSSPInstance < handle
         % Job scheduler
         % ----- ---------------------------------------------------- -----
         function scheduleJob(obj, jobID)
+            jts = obj.pendingData(jobID); 
+            ts = obj.solution.getTimeslot(jts); 
+            obj.solution.scheduleJob(jts, ts);
+            %obj.solution.schedule, [jts.activities.machineID; jts.activities.processingTime], obj.solution.plot();
         end
         
         % ----- ---------------------------------------------------- -----
         % Methods for overloading functionality
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
-            disp('Not yet implemented...')
+            disp('Not yet fully implemented...')
+            obj.solution.plot()
         end
         
 %         function disp(obj, varargin)

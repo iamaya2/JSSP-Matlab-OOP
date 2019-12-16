@@ -5,11 +5,10 @@ clear
 close all
 
 %% Parameter initialization
-fh = @(x) norm(x)^2;
-fh = @(x)Jong(x);
-fh([2 3]) % Should yield 13!
-flim = [-10 10; -2 2]; % Different limits to validate scaling
+% fh = @(x)Jong(x);
+fh = @(x)Ackley(x);
+fh([2 3]) % Should yield 13 for Jong!
+flim = [-20 10; -2 2; -50 45]; % Different limits to validate scaling
 properties = struct('visualMode', true, 'verboseMode', true, ...
-                'populationSize', 10, 'maxIter', 50);
-
+                'populationSize', 3, 'maxIter', 1, 'maxStagIter', 2);
 [position,fitness,details] = UPSO2(fh, flim, properties);
