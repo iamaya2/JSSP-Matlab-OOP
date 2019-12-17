@@ -6,6 +6,12 @@ classdef JSSPActivity < handle
     properties
         machineID %This property contains a vector with the order in which machines will be scheduled
         processingTime %This property contains a vector with the processing times of the operations within every job
+        isScheduled = false;
+        startTime = nan;
+    end
+    
+    properties (Dependent)
+        endTime;
     end
     
     methods
@@ -21,6 +27,10 @@ classdef JSSPActivity < handle
                     activityObj(idx).processingTime = procTime(idx);                
                 end                
             end
+        end
+        
+        function endTime = get.endTime(obj)
+            endTime = obj.startTime + obj.processingTime;
         end
     end
 end
