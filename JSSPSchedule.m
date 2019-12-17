@@ -3,14 +3,13 @@
 classdef JSSPSchedule < handle  % Only one schedule should be around
     properties               
         nbMachines % number of machines
-        schedule = JSSPMachine; %itinerary matrix of activities. Rows: Machines. Columns: Scheduled activities
+        schedule = JSSPMachine(); %itinerary matrix of activities. Rows: Machines. Columns: Scheduled activities
         nbMaxJobs = nan;
         schColorMap
     end        
     
     properties (Dependent)
         makespan % The time taken to complete all jobs
-%         emptyRangeInMachine
     end
     
     methods
@@ -26,7 +25,11 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                 jobObj.nbMachines = nbMachines;
                 jobObj.nbMaxJobs = nbMaxJobs;
                 jobObj.schedule(nbMachines,1) = JSSPMachine; % Empty column of actitivities
-                jobObj.schColorMap = [.92 .97 .97; parula(nbMaxJobs)];
+                for idx = 1 : nbMachines - 1
+                    jobObj.schedule(idx,1) = JSSPMachine; % Empty column of actitivities
+                end
+%                 jobObj.schColorMap = [.92 .97 .97; parula(nbMaxJobs)];
+                jobObj.schColorMap = [parula(nbMaxJobs)];
             end
         end
         
@@ -58,7 +61,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                 availableGaps = diff(emptyRanges(:,validColumns));
                 validGaps = find(availableGaps >= activityLength, 1);
                 if isempty(validGaps)
-                    timeIndex = emptyRanges(1,end); % Pending update. This should consider the empty gap at the end, if it exists
+                    timeIndex = max(emptyRanges(1,end),fixedStart); % Pending update. This should consider the empty gap at the end, if it exists
                 else
                     validTimes = emptyRanges(1,validColumns);                    
                     timeIndex = validTimes(validGaps); % This should be the location...
@@ -104,9 +107,17 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             % Schedule next Job in agenda       
             selAct = targetJob.popActivity();
             machineID = selAct.machineID;
-            activityLength = selAct.processingTime;
-            obj.schedule(machineID, timeslot:timeslot+activityLength-1) = targetJob.jobID;            
-            targetJob.updateLastActivity(selAct, timeslot+activityLength);
+            thisMachine = obj.schedule(machineID);            
+            selAct.startTime = timeslot;
+            if isempty(thisMachine.makespan)
+                thisMachine.activities = selAct; % First activity
+                thisMachine.jobList = targetJob.jobID;
+            else
+                thisMachine.activities = [thisMachine.activities selAct]; % Others
+                thisMachine.jobList = [thisMachine.jobList targetJob.jobID];
+            end
+            selAct.isScheduled = true;
+            targetJob.updateLastActivity(selAct, selAct.endTime);
         end
         
         % ----- ---------------------------------------------------- -----
@@ -118,15 +129,27 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
 %             heatmap(obj.schedule); % temp... change this to make similar effect with decimal values            
             figure, colormap(obj.schColorMap)
             axis([-0.1 obj.makespan+0.1 -obj.nbMachines-0.1 0.1])
-            set(gca,'CLim',[0 obj.nbMaxJobs]);            
-            colorbar('Ticks', 0:obj.nbMaxJobs) % Create colorbar
-            hold on
-            boxwidth = 1;
-            for idx = 1 : obj.makespan
-                for idy = 1 : obj.nbMachines
-                    rectangle('Position', [idx-1 -idy boxwidth boxwidth], 'FaceColor', obj.schColorMap(1+obj.schedule(idy,idx),:))
+            set(gca,'CLim',[1 obj.nbMaxJobs]);            
+            colorbar('Ticks', 1:obj.nbMaxJobs) % Create colorbar
+            box on
+            hold on            
+            for idM = 1 : length(obj.schedule)
+                eachMachine = obj.schedule(idM);
+                if ~isempty(eachMachine.makespan)
+                    for idx = 1 : length([eachMachine.activities])
+                        eachActivity = eachMachine.activities(idx);
+                        boxwidth = eachActivity.processingTime;
+                        rectangle('Position', [eachActivity.startTime -eachActivity.machineID boxwidth 1], ...
+                            'FaceColor', obj.schColorMap(eachMachine.jobList(idx),:))
+                    end
                 end
             end
+%             boxwidth = 1;
+%             for idx = 1 : obj.makespan
+%                 for idy = 1 : obj.nbMachines
+%                     rectangle('Position', [idx-1 -idy boxwidth boxwidth], 'FaceColor', obj.schColorMap(1+obj.schedule(idy,idx),:))
+%                 end
+%             end
         end
         
         % ----- ---------------------------------------------------- -----

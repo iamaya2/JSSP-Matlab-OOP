@@ -1,6 +1,7 @@
 classdef JSSPMachine < handle
     properties
         activities = JSSPActivity;
+        jobList
     end
     
     properties (Dependent)
