@@ -3,7 +3,7 @@ classdef JSSPJob < handle
         activities = JSSPActivity(nan,nan); % The activities to schedule (the order of machines to be scheduled and the processing times of the operations performed by each machine)
         jobID = nan; 
         lastScheduledActivity
-        lastScheduledTime = 1;
+        lastScheduledTime = 0;
     end
     
     properties (Dependent)

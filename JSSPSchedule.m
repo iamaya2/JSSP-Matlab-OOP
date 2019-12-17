@@ -52,35 +52,17 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                 timeIndex = targetJob.lastScheduledTime;
                 return
             else                
-                fixedStart = targetJob.lastScheduledTime; % Search starting point
-                
-                
+                fixedStart = targetJob.lastScheduledTime; % Search starting point                               
                 emptyRanges =  selectedMachine.emptyRangeInMachine;
-                availableGaps = diff(emptyRanges);
-                
-                
-                zerosIdx = selectedMachine(fixedStart:end) == 0; % Normalize scheduleIdentify empty spaces
-                diffIdx = diff(zerosIdx);
-                startIdx = find(diffIdx==1); % Identify start of zero regions
-                endIdx = find(diffIdx==-1); % Identify end of zero regions
-                if isempty(startIdx) && isempty(endIdx) % All full or all empty
-%                     if selectedMachine(1) == 0, timeIndex = 1; % Empty,                         
-                    if selectedMachine(fixedStart) == 0, timeIndex = fixedStart; % Empty,
-                    else, timeIndex = currMakespan + 1; % Full
-                    end
-                    return
-                elseif isempty(startIdx), startIdx = 0; 
-                elseif isempty(endIdx), timeIndex = startIdx(1)+fixedStart; return
-                end
-                if endIdx(1) < startIdx(1), startIdx = [0 startIdx]; end % Correct zero start
-                if endIdx(end) < startIdx(end), endIdx = [endIdx startIdx(end)+activityLength]; end % Correct zero end
-                for idx = 1:length(startIdx)      % This needs completion...
-                    if endIdx(idx)-startIdx(idx) >= activityLength % Enough space?
-                        timeIndex = startIdx(idx)+fixedStart; % +1 because of diff offset
-                        return
-                    end
-                end
-                timeIndex = currMakespan+1; % If full, set at end of schedule
+                validColumns = emptyRanges(1,:) >= fixedStart;
+                availableGaps = diff(emptyRanges(:,validColumns));
+                validGaps = find(availableGaps >= activityLength, 1);
+                if isempty(validGaps)
+                    timeIndex = emptyRanges(1,end); % Pending update. This should consider the empty gap at the end, if it exists
+                else
+                    validTimes = emptyRanges(1,validColumns);                    
+                    timeIndex = validTimes(validGaps); % This should be the location...
+                end                                               
             end
 %             if obj.makespan == 1 % Fix for when the schedule is too young
 %                 if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
