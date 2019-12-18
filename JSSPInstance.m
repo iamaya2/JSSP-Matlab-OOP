@@ -71,9 +71,17 @@ classdef JSSPInstance < handle
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----
         function activities = get.upcomingActivities(obj)
-            activities(obj.nbJobs) = obj.pendingData(end).activities(1);
+            if isempty(obj.pendingData(end).activities)
+                activities(obj.nbJobs) = JSSPActivity;
+            else
+                activities(obj.nbJobs) = obj.pendingData(end).activities(1);
+            end
             for idx = 1 : obj.nbJobs-1
-                activities(idx) = obj.pendingData(idx).activities(1);
+                if isempty(obj.pendingData(idx).activities)
+                    activities(idx) = JSSPActivity;
+                else
+                    activities(idx) = obj.pendingData(idx).activities(1);
+                end                
             end
         end
     end
