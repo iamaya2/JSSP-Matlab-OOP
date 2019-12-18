@@ -1,3 +1,4 @@
+% Class definition for creating instances of the JSSP
 classdef JSSPInstance < handle
     % ----- ---------------------------------------------------- -----
     %                       Properties
