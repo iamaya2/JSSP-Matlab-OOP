@@ -6,15 +6,15 @@ classdef JSSPInstance < handle
     properties
         nbJobs
         nbMachines
-        status = 'Undefined';
-        solution
-        instanceData = JSSPJob();
-        pendingData = JSSPJob();
+        status = 'Undefined'; % Instance status. Can be: Undefined (empty), Pending, Solved
+        solution % JSSPSchedule object with the current solution
+        instanceData = JSSPJob(); % JSSPJob array with the original instance
+        pendingData = JSSPJob(); % JSSPJob array with what remains of the instance
         features = 'Not yet implemented. Should be updated with empty feature vector';        
     end
     
     properties (Dependent)
-        upcomingActivities
+        upcomingActivities % JSSPActivity array with the first activity from each job
     end
     
     % ----- ---------------------------------------------------- -----
@@ -64,9 +64,18 @@ classdef JSSPInstance < handle
             obj.solution.plot()
         end
         
-%         function disp(obj, varargin)
-%             disp('Not yet implemented...')
-%         end
+        function disp(obj, varargin)
+            pTimes = nan(obj.nbJobs,obj.nbMachines);
+            mOrder = pTimes;
+            for idx = 1 : obj.nbJobs
+                pTimes(idx,:) = [obj.instanceData(idx).activities.processingTime];
+                mOrder(idx,:) = [obj.instanceData(idx).activities.machineID];
+            end
+            fprintf('Processing times (P):\n')
+            disp(pTimes)
+            fprintf('Machine orderings (M):\n')
+            disp(mOrder)
+        end
 
         % ----- ---------------------------------------------------- -----
         % Methods for dependent properties
