@@ -12,6 +12,10 @@ performanceJAO = JSSPHeurJAOFull(JSSPInstanceData);
 performanceJDO = JSSPHeurJDOFull(JSSPInstanceData2);
 
 % Evaluate performance
+
+% IMPORTANT: THIS FUNCTION REQUIRES THE ADDITION OF THE DELTA LEVEL TO
+% GENERATE INSTANCES WITH SPECIFIC LEVELS OF DIFFICULTY
+
 % performanceData = performanceJAO - performanceJDO; % Favors JAO
 performanceData = performanceJDO - performanceJAO; % Favors JDO
 
