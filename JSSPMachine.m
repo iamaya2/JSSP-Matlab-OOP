@@ -16,11 +16,11 @@ classdef JSSPMachine < handle
         end
         
         function ranges = get.emptyRangeInMachine(obj)
-            ranges = [0 obj.activities(:).endTime; obj.activities(:).startTime obj.makespan];
+            ranges = [0 sort([obj.activities(:).endTime]); sort([obj.activities(:).startTime]) obj.makespan];
         end
         
         function makespan = get.makespan(obj)
-            makespan = obj.activities(end).endTime;
+            makespan = max([obj.activities.endTime]);
         end
     end
 end
