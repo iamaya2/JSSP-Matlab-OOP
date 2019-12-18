@@ -13,5 +13,5 @@ else
     return 
 end
     instance.scheduleJob(NextActivity)
-    instance.plot
+    %instance.plot
 end

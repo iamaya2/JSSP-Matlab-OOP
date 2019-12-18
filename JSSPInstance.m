@@ -53,6 +53,12 @@ classdef JSSPInstance < handle
             jts = obj.pendingData(jobID); 
             ts = obj.solution.getTimeslot(jts); 
             obj.solution.scheduleJob(jts, ts);
+            for idx = 1 : length(obj.pendingData)
+                if ~isempty(obj.pendingData(idx).activities)
+                    return
+                end
+            end
+            obj.status = 'Solved';
             %obj.solution.schedule, [jts.activities.machineID; jts.activities.processingTime], obj.solution.plot();
         end
         
