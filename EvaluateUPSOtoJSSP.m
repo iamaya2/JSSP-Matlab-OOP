@@ -8,17 +8,18 @@ JSSPInstanceData = UPSOtoJSSP(UPSOArray, nbJobs); % Translate
 JSSPInstanceData2 = UPSOtoJSSP(UPSOArray, nbJobs); % Temp... just for testing
 
 % Solve
-performanceJAO = JSSPHeurJAOFull(JSSPInstanceData);
-performanceJDO = JSSPHeurJDOFull(JSSPInstanceData2);
-
+% performanceJAO = JSSPHeurJAOFull(JSSPInstanceData);
+% performanceJDO = JSSPHeurJDOFull(JSSPInstanceData2);
+performanceLPT = JSSPSolveInstance(JSSPInstanceData,1);
+performanceSPT = JSSPSolveInstance(JSSPInstanceData2,2);
 % Evaluate performance
 
 % IMPORTANT: THIS FUNCTION REQUIRES THE ADDITION OF THE DELTA LEVEL TO
 % GENERATE INSTANCES WITH SPECIFIC LEVELS OF DIFFICULTY
 
 % performanceData = performanceJAO - performanceJDO; % Favors JAO
-performanceData = performanceJDO - performanceJAO; % Favors JDO
-
+% performanceData = performanceJDO - performanceJAO; % Favors JDO
+performanceData = performanceLPT - performanceSPT;
 % Plot if requested
 if toPlot
     JSSPInstanceData.plot

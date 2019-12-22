@@ -17,13 +17,13 @@ properties = struct('visualMode', true, 'verboseMode', true, ...
 
 %% Basic example for optimizing instance
 % Parameter initialization
-nbJobs = 6;%3; % Number of jobs desired in the instance
-nbMachines = 6;%4; % Number of machines desired in the instance
+nbJobs = 3;%3; % Number of jobs desired in the instance
+nbMachines = 4;%4; % Number of machines desired in the instance
 timeRanges = [0 10]; % Min,Max processing times for the instance
 fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs);
 flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
 properties = struct('visualMode', true, 'verboseMode', true, ...
-                'populationSize', 15, 'maxIter', 100, 'maxStagIter', inf, ...
+                'populationSize', 15, 'maxIter', 100, 'maxStagIter', 100, ...
                 'selfConf', 2, 'globalConf', 2.5);
 % Call to the optimizer           
 [position,fitness,details] = UPSO2(fh, flim, properties);
