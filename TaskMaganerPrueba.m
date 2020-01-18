@@ -1,7 +1,7 @@
 % Parameter initialization
 nbJobsV = [3]
 nbMachinesV = [4]
-population = [50]% 30 50]
+population = [30]% 30 50]
 selfconf = [0.5 1.5 2.5]
 globalconf = [0.5 1.5 2.5]
 unifyfactor = [0.1 0.5 0.9]
@@ -81,7 +81,7 @@ for s=1:length(nbJobsV)
                     properties = struct('unifyFactor', unifyfactor(uf))
                     
                     
-                    properties = struct('visualMode', false, 'verboseMode', true, ...
+                    properties = struct('verboseMode', true, ...
                         'maxIter', 100, 'maxStagIter', 100);
                     
                     
