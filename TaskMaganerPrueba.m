@@ -1,7 +1,7 @@
 % Parameter initialization
 nbJobsV = [3]
 nbMachinesV = [4]
-population = [30]% 30 50]
+population = [30 50]% 30 50]
 selfconf = [0.5 1.5 2.5]
 globalconf = [0.5 1.5 2.5]
 unifyfactor = [0.1 0.5 0.9]
@@ -22,7 +22,8 @@ for s=1:length(nbJobsV)
     fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs); % Objective function for UPSO
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
     if s==1
-        newdir = ["SPTvsLPT_Small"]
+%         newdir = ["SPTvsLPT_Small"]
+        newdir = ["LPAvsMPA_Small"] % Favors MPA
     else
         newdir = ["SPTvsLPT_Large"]
     end
