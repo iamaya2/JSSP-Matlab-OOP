@@ -1,12 +1,12 @@
 % Parameter initialization
-nbJobsV = [3 10] 
-nbMachinesV = [4 10]
-population = [10 30 50]
-selfconf = [0.5 1 1.5 2 2.5]
-globalconf = [0.5 1 1.5 2 2.5]
-unifyfactor = [0.1 0.2 0.5 0.8 0.9]
-%Small Instance/Large Instance 
-for s=2:2
+nbJobsV = [3]; 
+nbMachinesV = [4];
+population = [30];
+selfconf = [0.5 1.5 2.5]
+globalconf = [0.5 1.5 2.5]
+unifyfactor = [0.1 0.5 0.9]
+
+for s=1:1
     directory2=['C:\Users\A00815751\Documents\GitHub\JSSP-Matlab-OOP\'];    
     oldfolder=cd(directory2)
  
@@ -20,14 +20,14 @@ end
 fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs); % Objective function for UPSO
 flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
     if s==1 
-        newdir = ['SPTvsLPT_Small']
+        newdir = ['LPTvsSPT_Small']
     else 
         newdir = ['SPTvsLPT_Large']
     end 
 status=mkdir('GeneratedInstances', newdir)
 % UPSO properties definition
 
-    for p=1:3
+    for p=1:1
         oldfolder=cd('GeneratedInstances'); 
         oldfolder=cd(newdir);
         vnewdirpop = [newdir + "_pop"+ num2str(population(p))];
@@ -37,7 +37,7 @@ status=mkdir('GeneratedInstances', newdir)
         properties = struct('populationSize', population(p));  
         
         
-        for sc=1:5
+        for sc=1:3
          
              oldfolder=cd(directory2);
              oldfolder=cd('GeneratedInstances'); 
@@ -51,7 +51,7 @@ status=mkdir('GeneratedInstances', newdir)
              
              
             
-                 for gc=1:5
+                 for gc=1:3
          
              oldfolder=cd(directory2);
              oldfolder=cd('GeneratedInstances'); 
@@ -64,11 +64,8 @@ status=mkdir('GeneratedInstances', newdir)
              
              properties = struct('globalConf', globalconf(gc));
              
-             
-             properties = struct('visualMode', false, 'verboseMode', true, ...
-                'maxIter', 100, 'maxStagIter', 100, ...
-             'unifyFactor', 0.5);
-                    for uf=1:5
+     
+                    for uf=1:3
          
              oldfolder=cd(directory2)
              oldfolder=cd('GeneratedInstances'); 
@@ -83,7 +80,7 @@ status=mkdir('GeneratedInstances', newdir)
              properties = struct('unifyFactor', unifyfactor(uf));
              
              
-             properties = struct('visualMode', false, 'verboseMode', true, ...
+             properties = struct('verboseMode', true, ...
                 'maxIter', 100, 'maxStagIter', 100);
 
 
