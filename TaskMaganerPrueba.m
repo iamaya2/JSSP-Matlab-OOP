@@ -1,9 +1,9 @@
 % Parameter initialization
 nbJobsV = [3]
 nbMachinesV = [4]
-population = [30 50]% 30 50]
-selfconf = [0.5 1.5 2.5]
-globalconf = [0.5 1.5 2.5]
+population = [50]% 30 50]
+selfconf = [1.5]
+globalconf = [2.5]
 unifyfactor = [0.1 0.5 0.9]
 nbRep = 30
 %Small Instance/Large Instance
