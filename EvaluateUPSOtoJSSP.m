@@ -23,7 +23,7 @@ performanceLPA = JSSPSolveInstance(JSSPInstanceData,4);
 % performanceData = performanceJDO - performanceJAO; % Favors JDO
 % performanceData = performanceSPT - performanceLPT;
 % performanceData = performanceLPT - performanceSPT;
-performanceData = performanceMPA - performanceLPA;
+performanceData = performanceLPA - performanceMPA;
 % Plot if requested
 if toPlot
     JSSPInstanceData.plot
