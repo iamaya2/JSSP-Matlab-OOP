@@ -50,8 +50,8 @@ classdef JSSPInstance < handle
         % Job scheduler
         % ----- ---------------------------------------------------- -----
         function scheduleJob(obj, jobID)
-            jts = obj.pendingData(jobID); 
-            ts = obj.solution.getTimeslot(jts); 
+            jts = obj.pendingData(jobID); % Job to schedule
+            ts = obj.solution.getTimeslot(jts); % Timeslot
             obj.solution.scheduleJob(jts, ts);
             for idx = 1 : length(obj.pendingData)
                 if ~isempty(obj.pendingData(idx).activities)

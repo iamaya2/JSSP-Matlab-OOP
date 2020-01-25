@@ -1,9 +1,9 @@
 %% Code for assessing fitness of UPSO values as a JSSP instance
 % UPSO works with a column array. The first n elements are processing time
 % values, while the next n values are machine orderings
-function performanceData = EvaluateUPSOtoJSSP(UPSOArray, nbJobs, varargin)
+function performanceData = EvaluateUPSOtoJSSP(UPSOArray, nbJobs, heurID, varargin)
 toPlot = false;
-if nargin == 3, toPlot = varargin{1}; end
+if nargin == 4, toPlot = varargin{1}; end
 JSSPInstanceData = UPSOtoJSSP(UPSOArray, nbJobs); % Translate
 JSSPInstanceData2 = UPSOtoJSSP(UPSOArray, nbJobs); % Temp... just for testing
 
@@ -12,8 +12,8 @@ JSSPInstanceData2 = UPSOtoJSSP(UPSOArray, nbJobs); % Temp... just for testing
 % performanceJDO = JSSPHeurJDOFull(JSSPInstanceData2);
 % performanceLPT = JSSPSolveInstance(JSSPInstanceData,1);
 % performanceSPT = JSSPSolveInstance(JSSPInstanceData2,2);
-performanceMPA = JSSPSolveInstance(JSSPInstanceData2,3);
-performanceLPA = JSSPSolveInstance(JSSPInstanceData,4);
+performanceHeur1 = JSSPSolveInstance(JSSPInstanceData2,heurID(1));
+performanceHeur2 = JSSPSolveInstance(JSSPInstanceData,heurID(2));
 % Evaluate performance
 
 % IMPORTANT: THIS FUNCTION REQUIRES THE ADDITION OF THE DELTA LEVEL TO
@@ -28,7 +28,10 @@ performanceLPA = JSSPSolveInstance(JSSPInstanceData,4);
 
 % performanceData = performanceSPT - performanceLPT;
 % performanceData = performanceLPT - performanceSPT;
-performanceData = performanceLPA - performanceMPA;
+
+
+
+performanceData = performanceHeur2 - performanceHeur1;
 
 % Plot if requested
 if toPlot

@@ -109,7 +109,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             machineID = selAct.machineID;
             thisMachine = obj.schedule(machineID);            
             selAct.startTime = timeslot;
-            if isempty(thisMachine.makespan)
+            if isempty(thisMachine.makespan) || isnan(thisMachine.makespan)
                 thisMachine.activities = selAct; % First activity
                 thisMachine.jobList = targetJob.jobID;
             else
