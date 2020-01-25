@@ -23,7 +23,7 @@ for s=1:length(nbJobsV)
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
     if s==1
 %         newdir = ["SPTvsLPT_Small"]
-        newdir = ["LPAvsMPA_Small"] % Favors MPA
+        newdir = ['MPAvsLPA_Small'] % Favors LPA
     else
         newdir = ["SPTvsLPT_Large"]
     end
@@ -34,6 +34,7 @@ for s=1:length(nbJobsV)
         oldfolder=cd('GeneratedInstances');
         oldfolder=cd(newdir);
         newdirpop = [newdir + "_pop"+ num2str(population(p))];
+        newdirpop = char(newdirpop);
         status=mkdir(newdirpop);
         
         properties = struct('populationSize', population(p));
@@ -45,7 +46,8 @@ for s=1:length(nbJobsV)
             oldfolder=cd('GeneratedInstances');
             oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
-            newdirSC =  [newdirpop + "_SC" + num2str(selfconf(sc))]
+            newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))]);
+            
             status   = mkdir(newdirSC)
             
             properties = struct('selfConf', selfconf(sc))
@@ -59,7 +61,7 @@ for s=1:length(nbJobsV)
                 oldfolder=cd(newdir);
                 oldfolder=cd(newdirpop);
                 oldfolder=cd(newdirSC);
-                newdirGC =  [newdirSC + "_GC" + num2str(globalconf(gc))]
+                newdirGC =  char([newdirSC + "_GC" + num2str(globalconf(gc))]);
                 status   = mkdir(newdirGC)
                 
                 properties = struct('globalConf', globalconf(gc))
@@ -76,7 +78,7 @@ for s=1:length(nbJobsV)
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
                     oldfolder=cd(newdirGC);
-                    newdirUF =  [newdirGC + "_UF" + num2str(unifyfactor(uf))]
+                    newdirUF =  char([newdirGC + "_UF" + num2str(unifyfactor(uf))]);
                     status   = mkdir(newdirUF)
                     
                     properties = struct('unifyFactor', unifyfactor(uf))
