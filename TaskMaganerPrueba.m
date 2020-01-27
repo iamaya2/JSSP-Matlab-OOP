@@ -1,3 +1,4 @@
+
 % Parameter initialization
 nbJobsV = [3]; %number of jobs desired
 nbMachinesV = [4]; %number of machines desired
@@ -106,3 +107,4 @@ for s=1:length(nbJobsV)
         end
     end
 end
+
