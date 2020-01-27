@@ -50,9 +50,15 @@ classdef JSSPInstance < handle
         % Job scheduler
         % ----- ---------------------------------------------------- -----
         function scheduleJob(obj, jobID)
-            jts = obj.pendingData(jobID); 
-            ts = obj.solution.getTimeslot(jts); 
+            jts = obj.pendingData(jobID); % Job to schedule
+            ts = obj.solution.getTimeslot(jts); % Timeslot
             obj.solution.scheduleJob(jts, ts);
+            for idx = 1 : length(obj.pendingData)
+                if ~isempty(obj.pendingData(idx).activities)
+                    return
+                end
+            end
+            obj.status = 'Solved';
             %obj.solution.schedule, [jts.activities.machineID; jts.activities.processingTime], obj.solution.plot();
         end
         
@@ -81,9 +87,17 @@ classdef JSSPInstance < handle
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----
         function activities = get.upcomingActivities(obj)
-            activities(obj.nbJobs) = obj.pendingData(end).activities(1);
+            if isempty(obj.pendingData(end).activities)
+                activities(obj.nbJobs) = JSSPActivity;
+            else
+                activities(obj.nbJobs) = obj.pendingData(end).activities(1);
+            end
             for idx = 1 : obj.nbJobs-1
-                activities(idx) = obj.pendingData(idx).activities(1);
+                if isempty(obj.pendingData(idx).activities)
+                    activities(idx) = JSSPActivity;
+                else
+                    activities(idx) = obj.pendingData(idx).activities(1);
+                end                
             end
         end
     end

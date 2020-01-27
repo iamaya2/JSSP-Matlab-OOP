@@ -1,3 +1,3 @@
-function [NextActivity] = JSSPHeurLPT (instance)
- [~,NextActivity] = max([instance.upcomingActivities.processingTime]);
+function [nextActivity] = JSSPHeurLPT (instance)
+ [~,nextActivity] = max([instance.upcomingActivities.processingTime]);
 end

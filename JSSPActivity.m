@@ -5,7 +5,7 @@
 classdef JSSPActivity < handle
     properties
         machineID %This property contains a vector with the order in which machines will be scheduled
-        processingTime %This property contains a vector with the processing times of the operations within every job
+        processingTime = nan;%This property contains a vector with the processing times of the operations within every job
         isScheduled = false;
         startTime = nan;
     end
