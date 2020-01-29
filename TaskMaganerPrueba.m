@@ -12,6 +12,7 @@ function [] = TaskMaganerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfco
 %timeRanges = [0 10]; % Min,Max processing times for the instance
 
 
+
 %Small Instance/Large Instance
 for s=1:length(nbJobsV)
     %     directory2=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\"]; % Ruta para funciones
@@ -20,15 +21,17 @@ for s=1:length(nbJobsV)
     
     nbJobs = nbJobsV(s); % Number of jobs desired in the instance
     nbMachines =nbMachinesV(s); % Number of machines desired in the instance
+
     fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs, heurID); % Objective function for UPSO
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
     newdir = heuristicID(1) +"vs"+heuristicID(2)+"_Small";
-    status=mkdir('GeneratedInstances', newdir)
+    status=mkdir('GeneratedInstances2', newdir)
     % UPSO properties definition
     
     for p=1:length(population)
-        oldfolder=cd('GeneratedInstances');
+        oldfolder=cd('GeneratedInstances2');
+
         oldfolder=cd(newdir);
         newdirpop = [newdir + "_pop"+ num2str(population(p))];
         status=mkdir(newdirpop);
@@ -36,10 +39,11 @@ for s=1:length(nbJobsV)
         properties = struct('populationSize', population(p));
         
         
-        for sc=1:length(selfconf)
+
+        for sc=2:length(selfconf)
             
             oldfolder=cd(directory2)
-            oldfolder=cd('GeneratedInstances');
+            oldfolder=cd('GeneratedInstances2');
             oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
             newdirSC =  [newdirpop + "_SC" + num2str(selfconf(sc))]
@@ -49,10 +53,11 @@ for s=1:length(nbJobsV)
             
             
             
+
             for gc=1:length(globalconf)
                 
                 oldfolder=cd(directory2)
-                oldfolder=cd('GeneratedInstances');
+                oldfolder=cd('GeneratedInstances2');
                 oldfolder=cd(newdir);
                 oldfolder=cd(newdirpop);
                 oldfolder=cd(newdirSC);
@@ -65,10 +70,11 @@ for s=1:length(nbJobsV)
                 properties = struct('verboseMode', true, ...
                     'maxIter', 100, 'maxStagIter', 100, ...
                     'unifyFactor', 0.5);
+
                 for uf=1:length(unifyfactor)
                     
                     oldfolder=cd(directory2)
-                    oldfolder=cd('GeneratedInstances');
+                    oldfolder=cd('GeneratedInstances2');
                     oldfolder=cd(newdir);
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
@@ -89,15 +95,17 @@ for s=1:length(nbJobsV)
                         oldfolder=cd(directory2)
                         [position,fitness,details] = UPSO2(fh, flim, properties);
                         generatedInstance = UPSOtoJSSP(position,nbJobs);
+
                         performanceData = EvaluateUPSOtoJSSP(position,nbJobs,heurID )
                         %directory=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\GeneratedInstances\SPTvsLPT"];
                         cell={generatedInstance, performanceData};
-                        oldfolder=cd('GeneratedInstances');
+                        oldfolder=cd('GeneratedInstances2');
                         oldfolder=cd(newdir);
                         oldfolder=cd(newdirpop);
                         oldfolder=cd(newdirSC);
                         oldfolder=cd(newdirGC);
                         oldfolder=cd(newdirUF);
+
                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(2))+"Rep"+num2str(idx)+heuristicID(1)+"vs"+heuristicID(2);
                         save(filename2,'cell')
 %                         directory2=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\"];
@@ -108,4 +116,5 @@ for s=1:length(nbJobsV)
         end
     end
 end
+
 end
