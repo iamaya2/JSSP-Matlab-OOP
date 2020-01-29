@@ -1,14 +1,14 @@
-function [performanceMatrix] = GeneralCheck(folder,heurID1, heurID2, population)
+function [] = ChangeInstanceName(folder,heurID1, heurID2, population)
 
 nbJobsV = [3]; %number of jobs desired
 nbMachinesV = [4]; %number of machines desired
-selfconf = [0.5 1.5 2.5]; %Self Confidence Factor to evaluate 
-globalconf = [0.5 1.5 2.5]; %Global Confidence Factor to evaluate
-unifyfactor = [0.1 0.5 0.9]; %Unifying Factor 
+selfconf = [2.5]; %Self Confidence Factor to evaluate 
+globalconf = [2.5]; %Global Confidence Factor to evaluate
+unifyfactor = [0.5]; %Unifying Factor 
 nbRep = 30; %Number of instances per combination
 timeRanges = [0 10];
 folder2 = pwd;
-
+folder3= char(folder2+"\"+folder);
 %Convert numeric heurID to a three letter heurID
     if heurID1 == 1 
         heuristicID1 = "LPT"; 
@@ -42,11 +42,11 @@ for sc=1:length(selfconf)
             addressUF = addressGC+"_UF"+num2str(unifyfactor(uf));
             for NB=1:nbRep;
                 oldfolder= cd(folder2);
-               PathAddress = char(folder+"\"+addressSize+"\"+addressPop+"\"+addressSC+"\"+addressGC+"\"+addressUF+"\");
+               PathAddress = char(folder3+"\"+addressSize+"\"+addressPop+"\"+addressSC+"\"+addressGC+"\"+addressUF+"\");
 %                "\JSSPInstanceJ"+num2str(nbJobsV(1))+"M"+num2str(nbMachinesV(1))+"T1"+num2str(timeRanges(1)) ...
 %                 +"T2"+num2str(timeRanges(2))+"Rep"+num2str(nb)+heuristicID1+"vs"+heuristicID2+".mat");
              address= char("JSSPInstanceJ"+num2str(nbJobsV(1))+"M"+num2str(nbMachinesV(1))+"T1"+num2str(timeRanges(1)) ...
-                 +"T2"+num2str(timeRanges(2))+"Rep"+num2str(NB)+heuristicID1+"vs"+heuristicID2+".mat");
+                 +"T2"+num2str(timeRanges(2))+"Rep"+num2str(NB)+"LPTvsSPT.mat");
 %              oldfolder = cd('GeneratedInstances');
 %              oldfolder = cd(addressSize);
 %              oldfolder = cd(addressPop);
@@ -57,20 +57,18 @@ for sc=1:length(selfconf)
 %               addpath(genpath('GeneratedInstances\' addressSize '\' addressPop '\'));
                 addpath(genpath(PathAddress));
               load(address)
-              a=nan; 
+              address2=char("JSSPInstanceJ"+num2str(nbJobsV(1))+"M"+num2str(nbMachinesV(1))+"T1"+num2str(timeRanges(1)) ...
+                 +"T2"+num2str(timeRanges(2))+"Rep"+num2str(NB)+heuristicID1+"vs"+heuristicID2+".mat");
+            oldfolder = cd(folder);
+              oldfolder = cd(addressSize);
+              oldfolder = cd(addressPop);
+              oldfolder = cd(addressSC);
+              oldfolder = cd(addressGC);
+              oldfolder = cd(addressUF);
+              save(address2,'cell')
+              delete(address)
                %oldfolder= cd(folder2);
-              status = singlecheck(cell, heurID1, heurID2);
-              if status == true 
-                  hypMatrix(NB, uf, gc, sc) = cell{2};
-              else 
-                 disp(addressPop);
-                 disp(addressSC);
-                 disp(addressGC);
-                 disp(addressUF); 
-                 disp(NB); 
-                 hypMatrix(NB, uf, gc, sc) = nan;
-                 error("Dismatched Performance Value") 
-              end
+          
               
              %disp(address)
              %a=cell{2};
@@ -80,12 +78,8 @@ for sc=1:length(selfconf)
         end
     end
 end
-     oldfolder= cd(folder2);
-     save(addressPop, 'hypMatrix')
-     performanceMatrix = hypMatrix;
+  
 end
     
         
 
-
-%load('C:\Users\nufo\Documents\GitHub\JSSP-Matlab-OOP\GeneratedInstances\LPAvsMPA_Small\LPAvsMPA_Small_pop10\LPAvsMPA_Small_pop10_SC0.5\LPAvsMPA_Small_pop10_SC0.5_GC0.5\LPAvsMPA_Small_pop10_SC0.5_GC0.5_UF0.1\JSSPInstanceJ3M4T7T210Rep1LPAvsMPA.mat')
