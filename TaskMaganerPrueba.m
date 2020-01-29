@@ -40,7 +40,7 @@ for s=1:length(nbJobsV)
         
         
 
-        for sc=1:length(selfconf)
+        for sc=2:length(selfconf)
             
             oldfolder=cd(directory2)
             oldfolder=cd('GeneratedInstances2');
