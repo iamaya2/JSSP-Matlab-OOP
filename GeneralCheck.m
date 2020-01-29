@@ -41,19 +41,23 @@ for sc=1:length(selfconf)
             addressUF = addressGC+"_UF"+num2str(unifyfactor(uf));
             for NB=1:nbRep;
                 oldfolder= cd(folder2);
-               % address = char(folder+"\"+addressSize+"\"+addressPop+"\"+addressSC+"\"+addressGC+"\"+addressUF+ ...
-               % "\JSSPInstanceJ"+num2str(nbJobsV(1))+"M"+num2str(nbMachinesV(1))+"T1"+num2str(timeRanges(1)) ...
-                % +"T2"+num2str(timeRanges(2))+"Rep"+num2str(nb)+heuristicID1+"vs"+heuristicID2+".mat");
+               PathAddress = char(folder+"\"+addressSize+"\"+addressPop+"\"+addressSC+"\"+addressGC+"\"+addressUF+"\");
+%                "\JSSPInstanceJ"+num2str(nbJobsV(1))+"M"+num2str(nbMachinesV(1))+"T1"+num2str(timeRanges(1)) ...
+%                 +"T2"+num2str(timeRanges(2))+"Rep"+num2str(nb)+heuristicID1+"vs"+heuristicID2+".mat");
              address= char("JSSPInstanceJ"+num2str(nbJobsV(1))+"M"+num2str(nbMachinesV(1))+"T1"+num2str(timeRanges(1)) ...
                  +"T2"+num2str(timeRanges(2))+"Rep"+num2str(NB)+heuristicID1+"vs"+heuristicID2+".mat");
-             oldfolder = cd('GeneratedInstances');
-             oldfolder = cd(addressSize);
-             oldfolder = cd(addressPop);
-             oldfolder = cd(addressSC);
-             oldfolder = cd(addressGC);
-             oldfolder = cd(addressUF);
+%              oldfolder = cd('GeneratedInstances');
+%              oldfolder = cd(addressSize);
+%              oldfolder = cd(addressPop);
+%              oldfolder = cd(addressSC);
+%              oldfolder = cd(addressGC);
+%              oldfolder = cd(addressUF);
+             cell = {};
+%               addpath(genpath('GeneratedInstances\' addressSize '\' addressPop '\'));
+                addpath(genpath(PathAddress));
               load(address)
-              a=nan;
+              a=nan; 
+               %oldfolder= cd(folder2);
               status = singlecheck(cell, heurID1, heurID2);
               if status == true 
                   hypMatrix(NB, uf, gc, sc) = cell{2};
@@ -64,6 +68,7 @@ for sc=1:length(selfconf)
                  disp(addressUF); 
                  disp(NB); 
                  hypMatrix(NB, uf, gc, sc) = nan;
+                 error("Dismatched Performance Value") 
               end
               
              %disp(address)
@@ -75,7 +80,7 @@ for sc=1:length(selfconf)
     end
 end
      oldfolder= cd(folder2);
-     save(addressPop, 'HypMatrix')
+     save(addressPop, 'hypMatrix')
 end
     
         
