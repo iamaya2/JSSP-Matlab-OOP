@@ -11,6 +11,7 @@ function [] = TaskManagerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfco
 %heuristicID = ["SPT" "LPT"]; % 3 Letters code: 1.LPT 2.SPT 3.MPA 4.LPA ; first the heuristic to worsen, second the heuristic to improve
 %timeRanges = [0 10]; % Min,Max processing times for the instance
 
+
 %Small Instance/Large Instance
 for s=1:length(nbJobsV)
     %     directory2=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\"]; % Ruta para funciones
