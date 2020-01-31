@@ -4,9 +4,9 @@ nbMachinesV = [4]; %number of machines desired
 population = [10];% 30 50] %number of particles for UPSO
 selfconf = [2.5]; %Self Confidence Factor to evaluate 
 globalconf = [2.5]; %Global Confidence Factor to evaluate
-unifyfactor = [0.1]; %Unifying Factor 
+unifyfactor = [0.5]; %Unifying Factor 
 nbRep = 30; %Number of instances per combination
-heurID = [3 4]; %Number: 1.LPT 2.SPT 3.MPA 4.LPA ; first the heuristic to worsen, second the heuristic to improve
-heuristicID = ["MPA" "LPA"]; % 3 Letters code: 1.LPT 2.SPT 3.MPA 4.LPA ; first the heuristic to worsen, second the heuristic to improve
+heurID = [2 1]; %Number: 1.LPT 2.SPT 3.MPA 4.LPA ; first the heuristic to worsen, second the heuristic to improve
+heuristicID = ["SPT" "LPT"]; % 3 Letters code: 1.LPT 2.SPT 3.MPA 4.LPA ; first the heuristic to worsen, second the heuristic to improve
 timeRanges = [0 10]; % Min,Max processing times for the instance
 TaskMaganerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, heuristicID);
