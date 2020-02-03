@@ -1,6 +1,8 @@
-a=1 
-if a==false
-    disp("funciona")
-else
-    disp("no funciona")
-end
+newdir = ["J"+num2str(20)+"M"+num2str(20)]
+disp(newdir)
+newdir= 'J';
+status=mkdir('TaillardInstances', newdir);
+%%
+newfolder='TaillardInstances'
+oldfolder=cd(newfolder)
+%%
