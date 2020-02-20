@@ -26,11 +26,11 @@ for s=1:length(nbJobsV)
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
     newdir = heuristicID(1) +"vs"+heuristicID(2)+"_Small";
-    status=mkdir('GeneratedInstances2', newdir)
+    status=mkdir('GeneratedInstances', newdir)
     % UPSO properties definition
     
     for p=1:length(population)
-        oldfolder=cd('GeneratedInstances2');
+        oldfolder=cd('GeneratedInstances');
 
         oldfolder=cd(newdir);
         newdirpop = [newdir + "_pop"+ num2str(population(p))];
@@ -40,10 +40,10 @@ for s=1:length(nbJobsV)
         
         
 
-        for sc=2:length(selfconf)
+        for sc=1:length(selfconf)
             
             oldfolder=cd(directory2)
-            oldfolder=cd('GeneratedInstances2');
+            oldfolder=cd('GeneratedInstances');
             oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
             newdirSC =  [newdirpop + "_SC" + num2str(selfconf(sc))]
@@ -57,7 +57,7 @@ for s=1:length(nbJobsV)
             for gc=1:length(globalconf)
                 
                 oldfolder=cd(directory2)
-                oldfolder=cd('GeneratedInstances2');
+                oldfolder=cd('GeneratedInstances');
                 oldfolder=cd(newdir);
                 oldfolder=cd(newdirpop);
                 oldfolder=cd(newdirSC);
@@ -74,7 +74,7 @@ for s=1:length(nbJobsV)
                 for uf=1:length(unifyfactor)
                     
                     oldfolder=cd(directory2)
-                    oldfolder=cd('GeneratedInstances2');
+                    oldfolder=cd('GeneratedInstances');
                     oldfolder=cd(newdir);
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
@@ -99,7 +99,7 @@ for s=1:length(nbJobsV)
                         performanceData = EvaluateUPSOtoJSSP(position,nbJobs,heurID )
                         %directory=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\GeneratedInstances\SPTvsLPT"];
                         cell={generatedInstance, performanceData};
-                        oldfolder=cd('GeneratedInstances2');
+                        oldfolder=cd('GeneratedInstances');
                         oldfolder=cd(newdir);
                         oldfolder=cd(newdirpop);
                         oldfolder=cd(newdirSC);

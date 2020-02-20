@@ -69,7 +69,7 @@ for sc=1:length(selfconf)
                  disp(addressUF); 
                  disp(NB); 
                  hypMatrix(NB, uf, gc, sc) = nan;
-                 error("Dismatched Performance Value") 
+                 warning("Dismatched Performance Value") 
               end
               
              %disp(address)
