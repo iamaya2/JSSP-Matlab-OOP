@@ -42,10 +42,12 @@ for s=1:length(nbJobsV)
         
 
         for sc=1:length(selfconf)
-            
+             oldfolder=cd(directory2)
+            oldfolder=cd('GeneratedInstances');
 
+            oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
-            newdirSC =  [newdirpop + "_SC" + num2str(selfconf(sc))]
+            newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))])
 
             status   = mkdir(newdirSC);
             
