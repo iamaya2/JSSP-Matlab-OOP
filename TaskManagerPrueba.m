@@ -25,15 +25,16 @@ for s=1:length(nbJobsV)
     fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs, heurID); % Objective function for UPSO
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
-    newdir = heuristicID(1) +"vs"+heuristicID(2)+"_Small";
-    status=mkdir('GeneratedInstances', newdir);
+
+    newdir = char(heuristicID(1) +"vs"+heuristicID(2)+"_Small");
+    status=mkdir('GeneratedInstances', newdir)
     % UPSO properties definition
     
     for p=1:length(population)
         oldfolder=cd('GeneratedInstances');
 
         oldfolder=cd(newdir);
-        newdirpop = [newdir + "_pop"+ num2str(population(p))];
+        newdirpop = char([newdir + "_pop"+ num2str(population(p))]);
         status=mkdir(newdirpop);
         
         properties = struct('populationSize', population(p));
@@ -41,12 +42,16 @@ for s=1:length(nbJobsV)
         
 
         for sc=1:length(selfconf)
-            
+             oldfolder=cd(directory2)
+            oldfolder=cd('GeneratedInstances');
+
+            oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
-            newdirSC =  [newdirpop + "_SC" + num2str(selfconf(sc))]
+            newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))])
+
             status   = mkdir(newdirSC);
             
-            properties = struct('selfConf', selfconf(sc))
+            properties = struct('selfConf', selfconf(sc));
             
             
             
@@ -58,8 +63,8 @@ for s=1:length(nbJobsV)
                 oldfolder=cd(newdir);
                 oldfolder=cd(newdirpop);
                 oldfolder=cd(newdirSC);
-                newdirGC =  [newdirSC + "_GC" + num2str(globalconf(gc))]
-                status   = mkdir(newdirGC)
+                newdirGC =  char([newdirSC + "_GC" + num2str(globalconf(gc))]);
+                status   = mkdir(newdirGC);
                 
                 properties = struct('globalConf', globalconf(gc))
                 
@@ -76,8 +81,8 @@ for s=1:length(nbJobsV)
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
                     oldfolder=cd(newdirGC);
-                    newdirUF =  [newdirGC + "_UF" + num2str(unifyfactor(uf))]
-                    status   = mkdir(newdirUF)
+                    newdirUF =  char([newdirGC + "_UF" + num2str(unifyfactor(uf))]);
+                    status   = mkdir(newdirUF);
                     
                     properties = struct('unifyFactor', unifyfactor(uf))
                     
