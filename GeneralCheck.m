@@ -69,7 +69,7 @@ for sc=1:length(selfconf)
                  disp(addressUF); 
                  disp(NB); 
                  hypMatrix(NB, uf, gc, sc) = nan;
-                 warning("Dismatched Performance Value") 
+                 error("Dismatched Performance Value") 
               end
               
              %disp(address)
@@ -81,7 +81,7 @@ for sc=1:length(selfconf)
     end
 end
      oldfolder= cd(folder2);
-     save(addressPop, 'hypMatrix')
+     save(addressPop, 'hypMatrix');
      performanceMatrix = hypMatrix;
 end
     
