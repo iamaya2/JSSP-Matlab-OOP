@@ -81,7 +81,7 @@ for sc=1:length(selfconf)
     end
 end
      oldfolder= cd(folder2);
-     save(addressPop, 'hypMatrix')
+     save(addressPop, 'hypMatrix');
      performanceMatrix = hypMatrix;
 end
     

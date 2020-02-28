@@ -25,9 +25,9 @@ for s=1:length(nbJobsV)
     fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs, heurID); % Objective function for UPSO
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
+    newdir =(heuristicID(1) +"vs"+heuristicID(2)+"_Small");
+    status=mkdir('GeneratedInstances', newdir);
 
-    newdir = char(heuristicID(1) +"vs"+heuristicID(2)+"_Small");
-    status=mkdir('GeneratedInstances', newdir)
     % UPSO properties definition
     
     for p=1:length(population)
@@ -42,12 +42,13 @@ for s=1:length(nbJobsV)
         
 
         for sc=1:length(selfconf)
-             oldfolder=cd(directory2)
-            oldfolder=cd('GeneratedInstances');
 
+
+            oldfolder=cd(directory2);
+            oldfolder=cd('GeneratedInstances');
             oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
-            newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))])
+            newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))]);
 
             status   = mkdir(newdirSC);
             
