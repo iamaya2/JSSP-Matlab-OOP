@@ -1,4 +1,4 @@
-function []= TaskManagerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, heuristicID)
+function [] = SingleConfiguration(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, heuristicID)
 % Parameter initialization
 %nbJobsV = [3]; %number of jobs desired
 %nbMachinesV = [4]; %number of machines desired
@@ -14,83 +14,39 @@ function []= TaskManagerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfcon
 
 
 %Small Instance/Large Instance
-for s=1:length(nbJobsV)
+
     %     directory2=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\"]; % Ruta para funciones
     directory2=pwd; % For same folder...
     oldfolder=cd(directory2)
     
-    nbJobs = nbJobsV(s); % Number of jobs desired in the instance
-    nbMachines =nbMachinesV(s); % Number of machines desired in the instance
+    nbJobs = nbJobsV(1); % Number of jobs desired in the instance
+    nbMachines =nbMachinesV(1); % Number of machines desired in the instance
 
     fh = @(x)EvaluateUPSOtoJSSP(x, nbJobs, heurID); % Objective function for UPSO
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
-    newdir =(heuristicID(1) +"vs"+heuristicID(2)+"_Small");
-    status=mkdir('GeneratedInstances', newdir);
-
-    % UPSO properties definition
-    
-    for p=1:length(population)
-        oldfolder=cd('GeneratedInstances');
-
-        oldfolder=cd(newdir);
-        newdirpop = char([newdir + "_pop"+ num2str(population(p))]);
-        status=mkdir(newdirpop);
+    newdir = heuristicID(1) +"vs"+heuristicID(2)+"_Small";
+    newdirpop = [newdir + "_pop"+ num2str(population(1))];
+    newdirSC =  [newdirpop + "_SC" + num2str(selfconf(1))]   
+    newdirGC =  [newdirSC + "_GC" + num2str(globalconf(1))]
         
-        properties = struct('populationSize', population(p));
-        
-        
-
-        for sc=1:length(selfconf)
-
-
-            oldfolder=cd(directory2);
-            oldfolder=cd('GeneratedInstances');
-            oldfolder=cd(newdir);
-            oldfolder=cd(newdirpop);
-            newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))]);
-
-            status   = mkdir(newdirSC);
-            
-            properties = struct('selfConf', selfconf(sc));
-            
-            
-            
-
-            for gc=1:length(globalconf)
-                
-                oldfolder=cd(directory2)
-                oldfolder=cd('GeneratedInstances');
-                oldfolder=cd(newdir);
-                oldfolder=cd(newdirpop);
-                oldfolder=cd(newdirSC);
-                newdirGC =  char([newdirSC + "_GC" + num2str(globalconf(gc))]);
-                status   = mkdir(newdirGC);
-                
-                properties = struct('globalConf', globalconf(gc))
-                
-                
-                properties = struct('verboseMode', true, ...
-                    'maxIter', 100, 'maxStagIter', 100, ...
-                    'unifyFactor', 0.5);
-
-                for uf=1:length(unifyfactor)
+        properties = struct('populationSize', population(1));
+        properties = struct('selfConf', selfconf(1))
+        properties = struct('globalConf', globalconf(1))
+        properties = struct('verboseMode', true, ...
+                    'maxIter', 100, 'maxStagIter', 100);
+        properties = struct('unifyFactor', unifyfactor(1))
+        properties = struct('verboseMode', true, ...
+                        'maxIter', 100, 'maxStagIter', 100);
                     
                     oldfolder=cd(directory2)
-                    oldfolder=cd('GeneratedInstances');
+                    oldfolder=cd('GeneratedInstances2');
                     oldfolder=cd(newdir);
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
                     oldfolder=cd(newdirGC);
-                    newdirUF =  char([newdirGC + "_UF" + num2str(unifyfactor(uf))]);
-                    status   = mkdir(newdirUF);
-                    
-                    properties = struct('unifyFactor', unifyfactor(uf))
-                    
-                    
-                    properties = struct('verboseMode', true, ...
-                        'maxIter', 100, 'maxStagIter', 100);
-                    
+                    newdirUF =  [newdirGC + "_UF" + num2str(unifyfactor(1))]
+                    status   = mkdir(newdirUF)
                     
                     % Call to the optimizer
                     for idx=1:nbRep
@@ -102,7 +58,7 @@ for s=1:length(nbJobsV)
                         performanceData = EvaluateUPSOtoJSSP(position,nbJobs,heurID )
                         %directory=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\GeneratedInstances\SPTvsLPT"];
                         cell={generatedInstance, performanceData};
-                        oldfolder=cd('GeneratedInstances');
+                        oldfolder=cd('GeneratedInstances2');
                         oldfolder=cd(newdir);
                         oldfolder=cd(newdirpop);
                         oldfolder=cd(newdirSC);
@@ -114,10 +70,6 @@ for s=1:length(nbJobsV)
 %                         directory2=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\"];
                         oldfolder=cd(directory2);
                     end
-                end
-            end
-        end
-    end
-end
+             
 
 end

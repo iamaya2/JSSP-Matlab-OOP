@@ -19,7 +19,9 @@ end
 aveSumaUF1= sumaUF1/9;
 aveSumaUF2= sumaUF2/9;
 aveSumaUF3= sumaUF3/9;
-
+disp(sumaUF1)
+disp(sumaUF2)
+disp(sumaUF3)
 sumaGC1=0;
 sumaGC2=0;
 sumaGC3=0;
@@ -33,7 +35,9 @@ end
 aveSumaGC1= sumaGC1/9;
 aveSumaGC2= sumaGC2/9;
 aveSumaGC3= sumaGC3/9;
-
+disp(sumaGC1)
+disp(sumaGC2)
+disp(sumaGC3)
 sumaSC1=0;
 sumaSC2=0;
 sumaSC3=0;
@@ -45,7 +49,9 @@ end
 aveSumaSC1= sumaSC1/9;
 aveSumaSC2= sumaSC2/9;
 aveSumaSC3= sumaSC3/9;
-
+disp(sumaSC1)
+disp(sumaSC2)
+disp(sumaSC3)
 disp(Gaverage)
 disp(aboveAve)
 disp(aveSumaUF1)
