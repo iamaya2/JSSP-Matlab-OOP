@@ -71,7 +71,7 @@ for s=1:length(nbJobsV)
     flim = [repmat(timeRanges(s,:),nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
     if objective == 1  
-        newdir =(heuristicID(1) +"vsAll"+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s)));
+        newdir =(heuristicID(1) +"vsAll_"+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s)));
     elseif objective == 2 
         newdir =( "Allvs"+heuristicID(1)+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s)));
     end
@@ -81,7 +81,7 @@ for s=1:length(nbJobsV)
    
     % Number of Particles
     for p=1:length(population)
-        oldfolder=cd('GeneratedInstances');
+        oldfolder=cd('GeneratedInstances_Advanced');
 
         oldfolder=cd(newdir);
         newdirpop = char([newdir + "_pop"+ num2str(population(p))]);
@@ -125,7 +125,7 @@ for s=1:length(nbJobsV)
                 for uf=1:length(unifyfactor)
                     
                     oldfolder=cd(directory2)
-                    oldfolder=cd('GeneratedInstances');
+                    oldfolder=cd('GeneratedInstances_Advanced');
                     oldfolder=cd(newdir);
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
@@ -156,9 +156,9 @@ for s=1:length(nbJobsV)
                         oldfolder=cd(newdirGC);
                         oldfolder=cd(newdirUF);
                      if objective ==1               
-                        filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(s,:))+"Rep"+num2str(idx)+heuristicID(1)+"vsAll");
+                        filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(s,:))+"Rep"+num2str(idx)+heuristicID(1)+"vsAll";
                      elseif objective ==2 
-                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(s,:))+"Rep"+num2str(idx)+"Allvs"+heuristicID(1));
+                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(s,:))+"Rep"+num2str(idx)+"Allvs"+heuristicID(1);
                         save(filename2,'JSSPInstance')                        
                         oldfolder=cd(directory2);
                     end

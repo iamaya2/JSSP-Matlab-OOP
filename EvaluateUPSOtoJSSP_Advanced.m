@@ -19,9 +19,9 @@ performanceHeur4 = JSSPSolveInstance(JSSPInstanceData4,heurID(4));
 
 %Getting the Makespan Delta
 if objective==1
-performanceData = performanceHeur1 - min(performanceHeur2,performanceHeur3,performanceHeur4);
+performanceData = performanceHeur1 - min([performanceHeur2,performanceHeur3,performanceHeur4]);
 elseif objective ==2
-performanceData = max(performanceHeur2,performanceHeur3,performanceHeur4)-performanceHeur1;
+performanceData = max([performanceHeur2,performanceHeur3,performanceHeur4])-performanceHeur1;
 end
 % Plot if requested
 if toPlot
