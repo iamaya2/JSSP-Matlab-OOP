@@ -8,5 +8,5 @@ unifyfactor = [0.9]; %Unifying Factor
 nbRep = 30; %Number of instances per combination
 heurID = [1 2 3 4]; %Number: 1.LPT 2.SPT 3.MPA 4.LPA ; first the heuristic to worsen, second the heuristic to improve
 timeRanges = [0 10]; % Min,Max processing times for the instance
-objective =1;
+objective = 1;
 TaskManagerPrueba_Advanced(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, objective);

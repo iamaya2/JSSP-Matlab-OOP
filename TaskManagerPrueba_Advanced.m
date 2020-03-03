@@ -71,9 +71,9 @@ for s=1:length(nbJobsV)
     flim = [repmat(timeRanges(s,:),nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
     if objective == 1  
-        newdir =(heuristicID(1) +"vsAll_"+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s)));
+        newdir =heuristicID(1) +"vsAll_"+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s));
     elseif objective == 2 
-        newdir =( "Allvs"+heuristicID(1)+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s)));
+        newdir ="Allvs"+heuristicID(1)+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s));
     end
     
     status=mkdir('GeneratedInstances_Advanced', newdir); %Creating a new folder within GeneratedInstances_Advanced
@@ -141,14 +141,14 @@ for s=1:length(nbJobsV)
                     
                     
                     % Call to the optimizer
-                    for idx=1:nbRep
+                    for idx=11:nbRep
 %                         
                         oldfolder=cd(directory2)
                         [position,fitness,details] = UPSO2(fh, flim, properties);
                         generatedInstance = UPSOtoJSSP(position,nbJobs);
 
                         performanceData = EvaluateUPSOtoJSSP_Advanced(position,nbJobs,heurID,objective);
-                        cell={generatedInstance, performanceData};
+                        JSSPInstance={generatedInstance, performanceData};
                         oldfolder=cd('GeneratedInstances_Advanced');
                         oldfolder=cd(newdir);
                         oldfolder=cd(newdirpop);
@@ -156,12 +156,12 @@ for s=1:length(nbJobsV)
                         oldfolder=cd(newdirGC);
                         oldfolder=cd(newdirUF);
                      if objective ==1               
-                        filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(s,:))+"Rep"+num2str(idx)+heuristicID(1)+"vsAll";
+                        filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(s,1))+"T2"+num2str(timeRanges(s,2))+"Rep"+num2str(idx)+heuristicID(1)+"vsAll";
                      elseif objective ==2 
-                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(s,:))+"Rep"+num2str(idx)+"Allvs"+heuristicID(1);
-                        save(filename2,'JSSPInstance')                        
-                        oldfolder=cd(directory2);
-                    end
+                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(s,1))+"T2"+num2str(timeRanges(s,2))+"Rep"+num2str(idx)+"Allvs"+heuristicID(1);
+                     end
+                      save(filename2,'JSSPInstance')                        
+                      oldfolder=cd(directory2);
                 end
             end
         end
