@@ -2,7 +2,7 @@
 % instanceData: nbJobs*nbMachines*2 array.
 %   First layer: Processing times.
 %   Second layer: Machine sequence
-function newInstanceCopy = createJSSPInstanceFromInstance(fullInstance, varargin)
+function [newInstanceCopy, JSSPdata] = createJSSPInstanceFromInstance(fullInstance, varargin)
 nbJobs = length(fullInstance.instanceData);
 nbMachines = length(fullInstance.instanceData(1).activities);
 JSSPdata = nan(nbJobs,nbMachines,2);

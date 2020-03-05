@@ -63,6 +63,19 @@ classdef JSSPInstance < handle
         end
         
         % ----- ---------------------------------------------------- -----
+        % Instance reset
+        % ----- ---------------------------------------------------- -----
+        function reset(obj)
+            [~, rawInstanceData] = createJSSPInstanceFromInstance(obj);
+            for idx = 1 : obj.nbJobs                
+                obj.pendingData(idx) = ...
+                    JSSPJob(rawInstanceData(idx,:,2),rawInstanceData(idx,:,1),idx);
+            end
+            obj.status = 'Pending';
+            obj.solution = JSSPSchedule(obj.nbMachines, obj.nbJobs);
+        end
+        
+        % ----- ---------------------------------------------------- -----
         % Methods for overloading functionality
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
