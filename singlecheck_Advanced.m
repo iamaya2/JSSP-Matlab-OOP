@@ -17,8 +17,8 @@ end
 
 makespan1 = JSSPSolveInstance(instance1, heurID);
 makespan2 = JSSPSolveInstance(instance2, heurID2(1));
-makespan3 = JSSPSolveInstance(instance2, heurID2(2));
-makespan4 = JSSPSolveInstance(instance2, heurID2(3));
+makespan3 = JSSPSolveInstance(instance3, heurID2(2));
+makespan4 = JSSPSolveInstance(instance4, heurID2(3));
 
 if objective==1
 perfData = makespan1 - min([makespan2,makespan3,makespan4]);

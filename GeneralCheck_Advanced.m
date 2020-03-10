@@ -13,25 +13,34 @@
 % % heurID:     It is the ID of the heuristic used to improve or        % %
 % %             diminish  1.- LPT  2.- SPT  3.- MPA  4.- LPA            % %
 % % objective : 1. XvsAll  2. AllvsX                                    % %
-% % nbJobs    : Number of Jobs of the instance to be checked            % %
-% % nbMachines: Number of Machines of the instance to be checked        % % 
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% % %                                                                    % %
+% % nbJobs    : Number of Jobs of the instance to be checked;           % %
+% %             Set to 3                                                % %
+% % nbMachines: Number of Machines of the instance to be checked        % %  
+% %             Set to 4                                                % %
+% % nbRep     : Number of instances created for the parcticular         % %
+% %             configuration;  set to 30                               % %
+% % timeRanges: Range in which the operation times are set.             % %
+% %             Set to [0 10]                                           % %
 % %                                                                     % %
-% % nbRep set to 30                                                     % %
-% % timeRanges set to[0 10]                                              % %
-% %                                                                     % %
-% % to change this use varargin(1) and varargin(2) respectively.        % %                                                % %
+% % to change this use varargin(1), varargin(2), varargin(3) and        % %
+% % varargin(4) respectively.                                           % %                                                % %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [performanceMatrix] = GeneralCheck_Advanced(folder,heurID, objective, nbJobs,nbMachines, varargin)
+function [performanceMatrix] = GeneralCheck_Advanced(folder,heurID, objective, varargin)
 
 folder2 = pwd;
 
+nbJobs = 3;
+nbMachines = 4;
 nbRep = 30;
 timeRanges = [0 10];
 
-if nargin == 6, nbRep = varargin{1}; end
-if nargin == 7, timeRanges = varargin{2}; end
+if nargin == 4, nbJobs = varargin{1}; end
+if nargin == 5, nbMachines = varargin{2}; end
+if nargin == 6, nbRep = varargin{3}; end
+if nargin == 7, timeRanges = varargin{4}; end
 
 
 %Convert numeric heurID to a three letter heurID

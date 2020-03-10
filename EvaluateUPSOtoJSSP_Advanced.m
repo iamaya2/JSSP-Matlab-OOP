@@ -1,7 +1,7 @@
 %% Code for assessing fitness of UPSO values as a JSSP instance
 % UPSO works with a column array. The first n elements are processing time
 % values, while the next n values are machine orderings
-function performanceData = EvaluateUPSOtoJSSP(UPSOArray, nbJobs, heurID, objective, varargin)
+function performanceData = EvaluateUPSOtoJSSP_Advanced(UPSOArray, nbJobs, heurID, objective, varargin)
 toPlot = false;
 if nargin == 5, toPlot = varargin{1}; end
 JSSPInstanceData = UPSOtoJSSP(UPSOArray, nbJobs); % Translate
@@ -23,6 +23,10 @@ performanceData = performanceHeur1 - min([performanceHeur2,performanceHeur3,perf
 elseif objective ==2
 performanceData = max([performanceHeur2,performanceHeur3,performanceHeur4])-performanceHeur1;
 end
+
+
+
+
 % Plot if requested
 if toPlot
     JSSPInstanceData.plot
