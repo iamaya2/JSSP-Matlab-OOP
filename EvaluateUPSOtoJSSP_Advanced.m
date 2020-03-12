@@ -3,7 +3,7 @@
 % values, while the next n values are machine orderings
 function performanceData = EvaluateUPSOtoJSSP_Advanced(UPSOArray, nbJobs, heurID, objective, varargin)
 toPlot = false;
-if nargin == 5, toPlot = varargin{1}; end
+if nargin == 6, toPlot = varargin{2}; end
 JSSPInstanceData = UPSOtoJSSP(UPSOArray, nbJobs); % Translate
 JSSPInstanceData2 = UPSOtoJSSP(UPSOArray, nbJobs); % Temp... just for testing
 JSSPInstanceData3 = UPSOtoJSSP(UPSOArray, nbJobs);
@@ -23,8 +23,12 @@ performanceData = performanceHeur1 - min([performanceHeur2,performanceHeur3,perf
 elseif objective ==2
 performanceData = max([performanceHeur2,performanceHeur3,performanceHeur4])-performanceHeur1;
 end
+delta = nan;
+if nargin>=5, delta = varargin{1}; end
 
-
+if ~isnan(delta)
+    performanceData = ((performanceData - delta).^2);
+end
 
 
 % Plot if requested
