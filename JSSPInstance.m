@@ -11,6 +11,7 @@ classdef JSSPInstance < handle
         instanceData = JSSPJob(); % JSSPJob array with the original instance
         pendingData = JSSPJob(); % JSSPJob array with what remains of the instance
         features = 'Not yet implemented. Should be updated with empty feature vector';        
+        rawInstanceData
     end
     
     properties (Dependent)
@@ -43,6 +44,7 @@ classdef JSSPInstance < handle
                 end
                 instance.status = 'Pending';
                 instance.solution = JSSPSchedule(instance.nbMachines, instance.nbJobs);                
+                instance.rawInstanceData = instanceData;
             end
         end
         
@@ -63,6 +65,19 @@ classdef JSSPInstance < handle
         end
         
         % ----- ---------------------------------------------------- -----
+        % Instance reset
+        % ----- ---------------------------------------------------- -----
+        function reset(obj)
+%             [~, rawInstanceData] = createJSSPInstanceFromInstance(obj);
+            for idx = 1 : obj.nbJobs                
+                obj.pendingData(idx) = ...
+                    JSSPJob(obj.rawInstanceData(idx,:,2),obj.rawInstanceData(idx,:,1),idx);
+            end
+            obj.status = 'Pending';
+            obj.solution = JSSPSchedule(obj.nbMachines, obj.nbJobs);
+        end
+        
+        % ----- ---------------------------------------------------- -----
         % Methods for overloading functionality
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
@@ -71,16 +86,16 @@ classdef JSSPInstance < handle
         end
         
         function disp(obj, varargin)
-            pTimes = nan(obj.nbJobs,obj.nbMachines);
-            mOrder = pTimes;
-            for idx = 1 : obj.nbJobs
-                pTimes(idx,:) = [obj.instanceData(idx).activities.processingTime];
-                mOrder(idx,:) = [obj.instanceData(idx).activities.machineID];
-            end
+%             pTimes = nan(obj.nbJobs,obj.nbMachines);
+%             mOrder = pTimes;
+%             for idx = 1 : obj.nbJobs
+%                 pTimes(idx,:) = [obj.instanceData(idx).activities.processingTime];
+%                 mOrder(idx,:) = [obj.instanceData(idx).activities.machineID];
+%             end
             fprintf('Processing times (P):\n')
-            disp(pTimes)
+            disp(obj.rawInstanceData(:,:,1))
             fprintf('Machine orderings (M):\n')
-            disp(mOrder)
+            disp(obj.rawInstanceData(:,:,2))
         end
 
         % ----- ---------------------------------------------------- -----
