@@ -70,7 +70,7 @@ for s=1:length(nbJobsV)
 
     delta = nan;
     toPlot = false;
-    if nargin == 11, delta = varargin{1}; end
+    if nargin == 11, delta = -varargin{1}; end
     if nargin == 12, toPlot = varargin{2}; end
     fh = @(x)EvaluateUPSOtoJSSP_Advanced(x, nbJobs, heurID, objective,delta, toPlot); % Objective function for UPSO      
     flim = [repmat(timeRanges(s,:),nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
@@ -90,7 +90,7 @@ for s=1:length(nbJobsV)
 
         oldfolder=cd(newdir);
         newdirpop = char([newdir + "_pop"+ num2str(population(p))]);
-        status=mkdir(newdirpop);
+        
         
         properties = struct('populationSize', population(p));
         
@@ -102,10 +102,10 @@ for s=1:length(nbJobsV)
             oldfolder=cd(directory2);
             oldfolder=cd('PruebasDelta');
             oldfolder=cd(newdir);
-            oldfolder=cd(newdirpop);
+           
             newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))]);
 
-            status   = mkdir(newdirSC);
+            
             
             properties = struct('selfConf', selfconf(sc));
             
@@ -117,10 +117,9 @@ for s=1:length(nbJobsV)
                 oldfolder=cd(directory2)
                 oldfolder=cd('PruebasDelta');
                 oldfolder=cd(newdir);
-                oldfolder=cd(newdirpop);
-                oldfolder=cd(newdirSC);
+              
                 newdirGC =  char([newdirSC + "_GC" + num2str(globalconf(gc))]);
-                status   = mkdir(newdirGC);
+             
                 
                 properties = struct('globalConf', globalconf(gc))
                 
@@ -132,11 +131,11 @@ for s=1:length(nbJobsV)
                     oldfolder=cd(directory2)
                     oldfolder=cd('PruebasDelta');
                     oldfolder=cd(newdir);
-                    oldfolder=cd(newdirpop);
-                    oldfolder=cd(newdirSC);
-                    oldfolder=cd(newdirGC);
+                 
                     newdirUF =  char([newdirGC + "_UF" + num2str(unifyfactor(uf))]);
-                    status   = mkdir(newdirUF);
+                    d = -delta;
+                    newdirDelta = char(["Delta_"+num2str(d)]);
+                    status   = mkdir(newdirDelta);
                     
                     properties = struct('unifyFactor', unifyfactor(uf))
                     
@@ -144,7 +143,7 @@ for s=1:length(nbJobsV)
                     properties = struct('verboseMode', true, ...
                         'maxIter', 100, 'maxStagIter', 100);
                     
-                    
+               
                     % Call to the optimizer
                     for idx=1:nbRep
 %                         
@@ -156,10 +155,8 @@ for s=1:length(nbJobsV)
                         JSSPInstance={generatedInstance, performanceData};
                         oldfolder=cd('PruebasDelta');
                         oldfolder=cd(newdir);
-                        oldfolder=cd(newdirpop);
-                        oldfolder=cd(newdirSC);
-                        oldfolder=cd(newdirGC);
-                        oldfolder=cd(newdirUF);
+                        oldfolder=cd(newdirDelta);
+                    
                      if objective ==1               
                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(s,1))+"T2"+num2str(timeRanges(s,2))+"Rep"+num2str(idx)+heuristicID(1)+"vsAll";
                      elseif objective ==2 
