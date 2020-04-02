@@ -73,7 +73,7 @@ for s=1:length(nbJobsV)
     if objective == 1  
         newdir =heuristicID(1) +"vsAll_"+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s));
     elseif objective == 2 
-        newdir ="Allvs"+heuristicID(1)+"J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s));
+        newdir ="Allvs"+heuristicID(1)+"_J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s));
     end
     
     status=mkdir('GeneratedInstances_Advanced', newdir); %Creating a new folder within GeneratedInstances_Advanced
@@ -141,7 +141,7 @@ for s=1:length(nbJobsV)
                     
                     
                     % Call to the optimizer
-                    for idx=11:nbRep
+                    for idx=1:30
 %                         
                         oldfolder=cd(directory2)
                         [position,fitness,details] = UPSO2(fh, flim, properties);
