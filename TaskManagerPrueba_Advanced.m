@@ -145,7 +145,9 @@ for s=1:length(nbJobsV)
                     
                
                     % Call to the optimizer
+
                     for idx=1:nbRep
+
 %                         
                         oldfolder=cd(directory2)
                         [position,fitness,details] = UPSO2(fh, flim, properties);
