@@ -9,30 +9,31 @@ function []= hypMatrixtoHeatMap(folder, HeurID1, HeurID2, Population)
     oldfolder=cd(folder); 
     hypMatrix=importdata(address); 
     hypMatrixCompressed=hypMatrix(:,:);
-    hypMatrixInverted=(hypMatrixCompressed.*-1);
-    
-    counter=1;
-    for x=1:9:19 
-        hypMatrixInverted2(:,counter)=(hypMatrixInverted(:,x));
-        hypMatrixInverted2(:,counter+1)=(hypMatrixInverted(:,x+1));
-         hypMatrixInverted2(:,counter+2)=(hypMatrixInverted(:,x+2));
-        counter=counter+3; 
-    end 
-    counter=10;
-     for x=4:9:22 
-        hypMatrixInverted2(:,counter)=(hypMatrixInverted(:,x));
-        hypMatrixInverted2(:,counter+1)=(hypMatrixInverted(:,x+1));
-         hypMatrixInverted2(:,counter+2)=(hypMatrixInverted(:,x+2));
-        counter=counter+3; 
-    end 
-       counter=19;
-     for x=7:9:25 
-        hypMatrixInverted2(:,counter)=(hypMatrixInverted(:,x));
-        hypMatrixInverted2(:,counter+1)=(hypMatrixInverted(:,x+1));
-         hypMatrixInverted2(:,counter+2)=(hypMatrixInverted(:,x+2));
-        counter=counter+3; 
-    end 
-    
+    hypMatrixInverted=sort(hypMatrixCompressed.*-1);
+
+        
+%    counter=1;
+%    for x=1:9:19 
+%        hypMatrixInverted2(:,counter)=(hypMatrixInverted(:,x));
+%        hypMatrixInverted2(:,counter+1)=(hypMatrixInverted(:,x+1));
+%         hypMatrixInverted2(:,counter+2)=(hypMatrixInverted(:,x+2));
+%        counter=counter+3; 
+%    end 
+%    counter=10;
+%     for x=4:9:22 
+%        hypMatrixInverted2(:,counter)=(hypMatrixInverted(:,x));
+%        hypMatrixInverted2(:,counter+1)=(hypMatrixInverted(:,x+1));
+%         hypMatrixInverted2(:,counter+2)=(hypMatrixInverted(:,x+2));
+%        counter=counter+3; 
+%     end 
+%       counter=19;
+%      for x=7:9:25 
+%        hypMatrixInverted2(:,counter)=(hypMatrixInverted(:,x));
+%        hypMatrixInverted2(:,counter+1)=(hypMatrixInverted(:,x+1));
+%         hypMatrixInverted2(:,counter+2)=(hypMatrixInverted(:,x+2));
+%         counter=counter+3; 
+%     end 
+%     
     
     a=heatmap(hypMatrixInverted);
     ylabel("Repetitions")

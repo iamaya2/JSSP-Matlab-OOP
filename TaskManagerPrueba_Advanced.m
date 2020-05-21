@@ -55,7 +55,7 @@
 
 
 
-function []= TaskManagerPrueba_Advanced(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, objective, varargin)
+function []= TaskManagerPrueba_Advanced(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, objective, folder, varargin)
 heuristicID=heurIDrepository(heurID); %convert the numeric ID into a three letter string ID, ex. 1-> "LPT" 
 
 
@@ -70,8 +70,8 @@ for s=1:length(nbJobsV)
 
     delta = nan;
     toPlot = false;
-    if nargin == 11, delta = -varargin{1}; end
-    if nargin == 12, toPlot = varargin{2}; end
+    if nargin == 12, delta = -varargin{1}; end
+    if nargin == 13, toPlot = varargin{2}; end
     fh = @(x)EvaluateUPSOtoJSSP_Advanced(x, nbJobs, heurID, objective,delta, toPlot); % Objective function for UPSO      
     flim = [repmat(timeRanges(s,:),nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
@@ -81,12 +81,12 @@ for s=1:length(nbJobsV)
         newdir ="Allvs"+heuristicID(1)+"_J"+num2str(nbJobsV(s))+"xM"+num2str(nbMachinesV(s));
     end
     
-    status=mkdir('PruebasDelta', newdir); %Creating a new folder within GeneratedInstances_Advanced
+    status=mkdir(folder, newdir); %Creating a new folder within GeneratedInstances_Advanced
 
    
     % Number of Particles
     for p=1:length(population)
-        oldfolder=cd('PruebasDelta');
+        oldfolder=cd(folder);
 
         oldfolder=cd(newdir);
         newdirpop = char([newdir + "_pop"+ num2str(population(p))]);
@@ -100,7 +100,7 @@ for s=1:length(nbJobsV)
 
 
             oldfolder=cd(directory2);
-            oldfolder=cd('PruebasDelta');
+            oldfolder=cd(folder);
             oldfolder=cd(newdir);
            
             newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))]);
@@ -115,7 +115,7 @@ for s=1:length(nbJobsV)
             for gc=1:length(globalconf)
                 
                 oldfolder=cd(directory2)
-                oldfolder=cd('PruebasDelta');
+                oldfolder=cd(folder);
                 oldfolder=cd(newdir);
               
                 newdirGC =  char([newdirSC + "_GC" + num2str(globalconf(gc))]);
@@ -129,7 +129,7 @@ for s=1:length(nbJobsV)
                 for uf=1:length(unifyfactor)
                     
                     oldfolder=cd(directory2)
-                    oldfolder=cd('PruebasDelta');
+                    oldfolder=cd(folder);
                     oldfolder=cd(newdir);
                  
                     newdirUF =  char([newdirGC + "_UF" + num2str(unifyfactor(uf))]);
@@ -153,7 +153,7 @@ for s=1:length(nbJobsV)
 
                         performanceData = EvaluateUPSOtoJSSP_Advanced(position,nbJobs,heurID,objective,delta,toPlot);
                         JSSPInstance={generatedInstance, performanceData};
-                        oldfolder=cd('PruebasDelta');
+                        oldfolder=cd(folder);
                         oldfolder=cd(newdir);
                         oldfolder=cd(newdirDelta);
                     

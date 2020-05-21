@@ -28,19 +28,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [performanceMatrix] = GeneralCheck_Advanced(folder,heurID, objective, varargin)
+function [performanceMatrix] = GeneralCheck_Advanced(folder,heurID, objective, delta, varargin)
 
 folder2 = pwd;
 
 nbJobs = 3;
 nbMachines = 4;
-nbRep = 30;
+nbRep = 50;
 timeRanges = [0 10];
 
-if nargin == 4, nbJobs = varargin{1}; end
-if nargin == 5, nbMachines = varargin{2}; end
-if nargin == 6, nbRep = varargin{3}; end
-if nargin == 7, timeRanges = varargin{4}; end
+if nargin == 5, nbJobs = varargin{1}; end
+if nargin == 6, nbMachines = varargin{2}; end
+if nargin == 7, nbRep = varargin{3}; end
+if nargin == 8, timeRanges = varargin{4}; end
 
 
 %Convert numeric heurID to a three letter heurID
@@ -63,7 +63,7 @@ if nargin == 7, timeRanges = varargin{4}; end
         
             for NB=1:nbRep;
                 oldfolder= cd(folder2);
-                PathAddress = char(folder+"\"+addressID+"\");
+                PathAddress = char(folder+"\"+addressID+"\Delta_"+num2str(delta)+"\");
                
                 if objective == 1
                     address= char("JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1)) ...
@@ -79,21 +79,19 @@ if nargin == 7, timeRanges = varargin{4}; end
                 load(address)
                 
            
-                status = singlecheck_Advanced(JSSPInstance, heurID, objective);
                 
-              if status == true 
-                  perfDataMatrix(NB) = JSSPInstance{2};
-              else 
-                 disp(address);
-                
-                 perfDataMatrix(NB) = nan;
-                 warning("Dismatched Performance Value") 
-              end
-          
+                perfDataMatrix(NB,1) = JSSPInstance{2};
+                perfDataMatrix(NB,2) = delta;
+                perfDataMatrix(NB,3) = makespan(JSSPInstance{1}, 1);
+                perfDataMatrix(NB,4) = makespan(JSSPInstance{1}, 2);
+                perfDataMatrix(NB,5) = makespan(JSSPInstance{1}, 3);
+                perfDataMatrix(NB,6) = makespan(JSSPInstance{1}, 4);
+            
             end
-
+     filename=[addressID+"_Delta_"+num2str(delta)]
+   
      oldfolder= cd(folder2);
-     save(addressID, 'perfDataMatrix');
+         save(filename, 'perfDataMatrix');
      performanceMatrix = perfDataMatrix;
 end
     

@@ -36,6 +36,6 @@ if toPlot
     JSSPInstanceData.plot
     JSSPInstanceData2.plot
      JSSPInstanceData3.plot
-    JSSPInstanceData24.plot
+    JSSPInstanceData4.plot
 end
 end
