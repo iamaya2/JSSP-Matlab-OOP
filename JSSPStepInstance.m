@@ -1,3 +1,8 @@
+%% Function for stepping instance with heuristics
+% 1: LPT
+% 2: SPT
+% 3: MPA
+% 4: LPA
 function [] = JSSPStepInstance (instance, heurID)
 
 if heurID==1
