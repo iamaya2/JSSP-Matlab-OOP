@@ -40,10 +40,10 @@ for x=1:length(heuristicID)
     
       hypMatrix=importdata(address);
       hypMatrix_Inv=(hypMatrix*-1)';
-      hypMatrix_concat(:,x)=hypMatrix_Inv(:);
+      hypMatrix_concat2(:,x)=hypMatrix_Inv(:);
 end
 oldfolder=cd(folder2);    
 %a=heatmap(hypMatrix_concat) 
  CATEGORYNAMES = {"1" "2" "3" "4" "5" "6" "7" "8"};
-     violinplot(hypMatrix_concat, CATEGORYNAMES, 'ViolinColor',[0,0,1],'width', 0.3, 'violinalpha', 0.3, 'ShowData', false)     
+     violinplot(hypMatrix_concat2, CATEGORYNAMES, 'ViolinColor',[0,0,1],'width', 0.3, 'violinalpha', 0.3, 'ShowData', false)     
 % hist(hypMatrix_concat(1,:))
