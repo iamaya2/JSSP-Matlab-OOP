@@ -49,7 +49,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             %debugging
 %             if machineID == 1
             if targetJob.jobID == 1
-                pause(0.5)
+%                 pause(0.5)
             end
             if isnan(currMakespan) % Fix for when the schedule is too young
 %                 if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
