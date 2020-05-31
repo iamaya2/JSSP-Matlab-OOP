@@ -133,9 +133,10 @@ for s=1:length(nbJobsV)
                     oldfolder=cd(newdir);
                  
                     newdirUF =  char([newdirGC + "_UF" + num2str(unifyfactor(uf))]);
-                    d = -delta;
-                    newdirDelta = char(["Delta_"+num2str(d)]);
-                    status   = mkdir(newdirDelta);
+                    if  ~isnan(delta), d = -delta; end
+                    
+                    if  ~isnan(delta), newdirDelta = char(["Delta_"+num2str(d)]); end
+                    if  ~isnan(delta), status   = mkdir(newdirDelta); end
                     
                     properties = struct('unifyFactor', unifyfactor(uf))
                     
@@ -157,7 +158,8 @@ for s=1:length(nbJobsV)
                         JSSPInstance={generatedInstance, performanceData};
                         oldfolder=cd(folder);
                         oldfolder=cd(newdir);
-                        oldfolder=cd(newdirDelta);
+                        
+                        if ~isnan(delta), oldfolder=cd(newdirDelta); end
                     
                      if objective ==1               
                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(s,1))+"T2"+num2str(timeRanges(s,2))+"Rep"+num2str(idx)+heuristicID(1)+"vsAll";
