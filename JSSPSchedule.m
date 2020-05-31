@@ -45,6 +45,12 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             activityLength = targetJob.activities(1).processingTime;
             selectedMachine = obj.schedule(machineID); % Machine object
             currMakespan = obj.makespan;
+            
+            %debugging
+%             if machineID == 1
+            if targetJob.jobID == 1
+%                 pause(0.5)
+            end
             if isnan(currMakespan) % Fix for when the schedule is too young
 %                 if selectedMachine == 0, timeIndex = targetJob.lastScheduledTime;
 %                 else, timeIndex = 2; 
@@ -56,15 +62,31 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                 return
             else                
                 fixedStart = targetJob.lastScheduledTime; % Search starting point                               
-                emptyRanges =  selectedMachine.emptyRangeInMachine;
-                validColumns = emptyRanges(1,:) >= fixedStart;
-                availableGaps = diff(emptyRanges(:,validColumns));
-                validGaps = find(availableGaps >= activityLength, 1);
+                emptyRanges =  selectedMachine.emptyRangeInMachine;                
+                availableGaps = diff(emptyRanges);
+                validGaps = find(availableGaps >= activityLength);
                 if isempty(validGaps)
                     timeIndex = max(emptyRanges(1,end),fixedStart); % Pending update. This should consider the empty gap at the end, if it exists
                 else
-                    validTimes = emptyRanges(1,validColumns);                    
-                    timeIndex = validTimes(validGaps); % This should be the location...
+                    candidateTimes = emptyRanges(1,validGaps);
+                    candidateGaps  = availableGaps(validGaps);
+                    for idx = 1 : length(candidateTimes)
+                        testTime = candidateTimes(idx);
+                        if testTime >= fixedStart
+                            timeIndex = testTime; % time is earliest and valid
+                            return                 % stop searching
+                        else
+                            timeShift = fixedStart - testTime;                             
+                            if candidateGaps(idx) - timeShift >= activityLength
+                                timeIndex = testTime+timeShift; % time is earliest and still valid
+                                return                          % stop searching
+                            end
+                        end
+                    end
+                    timeIndex = max(emptyRanges(1,end),fixedStart); % no valid gap found
+%                     validColumns = emptyRanges(1,:) >= fixedStart; % This should not be here
+%                     validTimes = emptyRanges(1,validColumns);                    
+%                     timeIndex = validTimes(validGaps); % This should be the location...
                 end                                               
             end
 %             if obj.makespan == 1 % Fix for when the schedule is too young
@@ -133,7 +155,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             colorbar('Ticks', 1:obj.nbMaxJobs) % Create colorbar
             box on
             hold on            
-            for idM = 1 : length(obj.schedule)
+            for idM = 1 : obj.nbMachines %length(obj.schedule)
                 eachMachine = obj.schedule(idM);
                 if ~isempty(eachMachine.makespan)
                     for idx = 1 : length([eachMachine.activities])
@@ -144,6 +166,11 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
                     end
                 end
             end
+            
+            xlabel('Time units')
+            ylabel('Machine ID')
+            set(gca,'YTickLabel', num2cell(obj.nbMachines:-1:1), 'YTick', -obj.nbMachines+0.5:-0.5)
+            
 %             boxwidth = 1;
 %             for idx = 1 : obj.makespan
 %                 for idy = 1 : obj.nbMachines
