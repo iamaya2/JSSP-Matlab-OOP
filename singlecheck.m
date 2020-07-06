@@ -3,7 +3,7 @@ instance1 = createJSSPInstanceFromInstance(Instance{1});
 instance2 = createJSSPInstanceFromInstance(Instance{1});
 makespan1 = JSSPSolveInstance(instance1, heurID1);
 makespan2 = JSSPSolveInstance(instance2, heurID2);
-perfData = makespan2 - makespan1;
+perfData = makespan1 - makespan2;
 if perfData == Instance{2} 
     status = true ;
     disp("Value confirmed")

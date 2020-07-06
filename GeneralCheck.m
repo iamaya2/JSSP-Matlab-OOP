@@ -2,9 +2,9 @@ function [performanceMatrix] = GeneralCheck(folder,heurID1, heurID2, population)
 
 nbJobsV = [3]; %number of jobs desired
 nbMachinesV = [4]; %number of machines desired
-selfconf = [2.5]; %Self Confidence Factor to evaluate 
-globalconf = [2.5]; %Global Confidence Factor to evaluate
-unifyfactor = [0.5]; %Unifying Factor 
+selfconf = [0.5 1.5 2.5]; %Self Confidence Factor to evaluate 
+globalconf = [0.5 1.5 2.5]; %Global Confidence Factor to evaluate
+unifyfactor = [0.1 0.5 0.9]; %Unifying Factor 
 nbRep = 30; %Number of instances per combination
 timeRanges = [0 10];
 folder2 = pwd;
@@ -53,15 +53,15 @@ for sc=1:length(selfconf)
 %              oldfolder = cd(addressSC);
 %              oldfolder = cd(addressGC);
 %              oldfolder = cd(addressUF);
-             cell = {};
+             JSSPInstance = {};
 %               addpath(genpath('GeneratedInstances\' addressSize '\' addressPop '\'));
                 addpath(genpath(PathAddress));
               load(address)
               a=nan; 
                %oldfolder= cd(folder2);
-              status = singlecheck(cell, heurID1, heurID2);
+              status = singlecheck(JSSPInstance, heurID1, heurID2);
               if status == true 
-                  hypMatrix(NB, uf, gc, sc) = cell{2};
+                  hypMatrix(NB, uf, gc, sc) = JSSPInstance{2};
               else 
                  disp(addressPop);
                  disp(addressSC);

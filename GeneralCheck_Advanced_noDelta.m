@@ -81,7 +81,10 @@ if nargin == 7, timeRanges = varargin{4}; end
            
                 
                 perfDataMatrix(NB,1) = JSSPInstance{2};
-                
+                 perfDataMatrix(NB,2) = makespan(JSSPInstance{1}, 1);
+                perfDataMatrix(NB,3) = makespan(JSSPInstance{1}, 2);
+                perfDataMatrix(NB,4) = makespan(JSSPInstance{1}, 3);
+                perfDataMatrix(NB,5) = makespan(JSSPInstance{1}, 4);
             
             end
      filename=(addressID)

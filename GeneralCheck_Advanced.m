@@ -34,7 +34,7 @@ folder2 = pwd;
 
 nbJobs = 3;
 nbMachines = 4;
-nbRep = 50;
+nbRep = 30;
 timeRanges = [0 10];
 
 if nargin == 5, nbJobs = varargin{1}; end
@@ -62,8 +62,9 @@ if nargin == 8, timeRanges = varargin{4}; end
       
         
             for NB=1:nbRep;
-                oldfolder= cd(folder2);
-                PathAddress = char(folder+"\"+addressID+"\Delta_"+num2str(delta)+"\");
+%                 oldfolder= cd(folder2);
+%                 oldfolder=cd(folder);
+                PathAddress = char(folder2+"\"+folder+"\"+addressID+"\Delta_"+num2str(delta)+"\");
                
                 if objective == 1
                     address= char("JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1)) ...
@@ -74,10 +75,10 @@ if nargin == 8, timeRanges = varargin{4}; end
                 end
 %            
                 JSSPInstance = {};
-%        
-                addpath(genpath(PathAddress));
+                addpath(genpath(PathAddress))
+%                 oldfolder=cd(PathAddress);
                 load(address)
-                
+%                 oldfolder= cd(folder2);
            
                 
                 perfDataMatrix(NB,1) = JSSPInstance{2};
@@ -90,9 +91,11 @@ if nargin == 8, timeRanges = varargin{4}; end
             end
      filename=[addressID+"_Delta_"+num2str(delta)]
    
-     oldfolder= cd(folder2);
+     %oldfolder= cd(folder2);
          save(filename, 'perfDataMatrix');
      performanceMatrix = perfDataMatrix;
+     rmpath(genpath(PathAddress))
+     nan=0;
 end
     
         
