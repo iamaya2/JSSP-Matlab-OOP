@@ -10,7 +10,7 @@ function []= hypMatrixtoHeatMap(folder, HeurID1, HeurID2, Population)
     hypMatrix=importdata(address); 
     hypMatrixCompressed=hypMatrix(:,:); %This arranges the 4-D matrix in a 2-D matrix, 
     hypMatrixInverted=(hypMatrixCompressed.*-1);
-    %hypMatrixInverted=sort(hypMatrixInverted); %Uncomment for sort output
+    hypMatrixInverted=sort(hypMatrixInverted); %Uncomment for sort output
    
     
  
@@ -41,6 +41,6 @@ function []= hypMatrixtoHeatMap(folder, HeurID1, HeurID2, Population)
     a=heatmap(hypMatrixInverted);
     ylabel("Repetitions")
     xlabel("Configurations")
-    title(HeuristicID1+" vs "+HeuristicID2+" Small Population: "+num2str(Population))
+    %title(HeuristicID1+" vs "+HeuristicID2+" Small Population: "+num2str(Population))
       oldfolder=cd(folder2);
 end

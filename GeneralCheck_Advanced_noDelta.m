@@ -32,10 +32,10 @@ function [performanceMatrix] = GeneralCheck_Advanced_noDelta(folder,heurID, obje
 
 folder2 = pwd;
 
-nbJobs = 3;
-nbMachines = 4;
+nbJobs = 10;
+nbMachines = 10;
 nbRep = 30;
-timeRanges = [0 10];
+timeRanges = [0 100];
 
 if nargin == 4, nbJobs = varargin{1}; end
 if nargin == 5, nbMachines = varargin{2}; end

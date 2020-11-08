@@ -5,6 +5,7 @@
     objective = [1 1 1 1 2 2 2 2];
     nbJobsV = [3];
     nbMachinesV = [4];
+    timeranges=[0 10];
     folder2 = pwd;
     a=size(HeurID,2);
     
@@ -31,17 +32,35 @@
     
     
     end
-
+    
     cd(folder2)
-    CATEGORYNAMES = {"LPTvsAll" "SPTvsAll" "MPAvsAll" "LPAvsAll" "AllvsLPT" "AllvsSPT" "AllvsMPA" "AllvsLPA"};
+    tt = Graphics('Prueba');
+
+    CATEGORYNAMES = {"LPT vs. All" "SPT vs. All" "MPA vs. All" "LPA vs. All" "All vs. LPT" "All vs. SPT" "All vs. MPA" "All vs. LPA"};
     violinplot(perfData1, CATEGORYNAMES,'ViolinColor',[1,0,0],'width', 0.3, 'violinalpha', 0.3, 'ShowData', false) 
     hold on
     violinplot(perfData2, CATEGORYNAMES,'ViolinColor',[0,0,1],'width', 0.3, 'violinalpha', 0.3, 'ShowData', false) 
-
-    
-    xlabel("Configurations")
-    ylabel("Makespan Delta")
-    m1= median(perfData1)
-    m2= median(perfData2)
-
-
+    xlabel("Generation Focus")
+    ylabel("Makespan Difference")
+    setup(tt)
+    tt.setfont(15)
+%     
+%        figure
+%     subplot(1,2,1)
+%     hist(perfData1(:,1))
+%     subplot(1,2,2)
+%     hist(perfData2(:,1))
+%     
+%     
+%     m1= median(perfData1)
+%     m2= median(perfData2)
+%     m1= mean(perfData1)
+%     m2= mean(perfData2)
+%     m1= min(perfData1)
+%     m2= min(perfData2)
+%     m1= max(perfData1)
+%     m2= max(perfData2)
+%     m1= std(perfData1)
+%     m2= std(perfData2)
+%     m1= iqr(perfData1)
+%     m2= iqr(perfData2)

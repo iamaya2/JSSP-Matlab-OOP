@@ -92,12 +92,15 @@ classdef JSSPInstance < handle
 %                 pTimes(idx,:) = [obj.instanceData(idx).activities.processingTime];
 %                 mOrder(idx,:) = [obj.instanceData(idx).activities.machineID];
 %             end
+        if strcmp(obj.status,"Undefined")
+            fprintf('Undefined Instance\n')
+        else
             fprintf('Processing times (P):\n')
             disp(obj.rawInstanceData(:,:,1))
             fprintf('Machine orderings (M):\n')
             disp(obj.rawInstanceData(:,:,2))
         end
-
+        end
         % ----- ---------------------------------------------------- -----
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----

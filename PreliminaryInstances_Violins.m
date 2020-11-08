@@ -123,9 +123,30 @@ oldfolder= cd(folder);
 PreliminaryViolin(:,1)=violindata(:,1);
 PreliminaryViolin(:,2)=Violin_1(:,1);
 PreliminaryViolin(:,3)=Violin_2(:,1);
+PreliminaryViolin1=violindata(:,1);
+PreliminaryViolin2=Violin_1(:,1);
+PreliminaryViolin3=Violin_2(:,1);
 %%
 CATEGORYNAMES = {"Random" "LPT" "SPT"};
     violinplot(PreliminaryViolin, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
-    ylabel("Performance Gap (SPT-LPT)")
-        title("PreliminaryInstances")
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
+ylim([-70 80])
+figure
+CATEGORYNAMES = {"Random"};
+    violinplot(PreliminaryViolin1, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
+ylim([-70 80])
+figure
+CATEGORYNAMES = {"LPT"};
+    violinplot(PreliminaryViolin2, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
+ylim([-70 80])
+figure
+CATEGORYNAMES = {"SPT"};
+    violinplot(PreliminaryViolin3, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
 ylim([-70 80])

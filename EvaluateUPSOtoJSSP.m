@@ -9,7 +9,7 @@ JSSPInstanceData2 = UPSOtoJSSP(UPSOArray, nbJobs); % Temp... just for testing
 
 % Solve
 % performanceJAO = JSSPHeurJAOFull(JSSPInstanceData);
-% performanceJDO = JSSPHeurJDOFull(JSSPInstanceData2);
+% performanceJDO = JSSPHeurJDOFull(JSSPInstanceData2);  
 % performanceLPT = JSSPSolveInstance(JSSPInstanceData,1);
 % performanceSPT = JSSPSolveInstance(JSSPInstanceData2,2);
 performanceHeur1 = JSSPSolveInstance(JSSPInstanceData2,heurID(1));

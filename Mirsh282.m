@@ -24,6 +24,6 @@ function[FeatureValue] = Mirsh282(JSSPInstance)
      ML(a)=iZeros;
      
   end
-FeatureValue= mean(ML)/JSSPInstance.nbMachines
+FeatureValue= mean(ML)/JSSPInstance.nbMachines;
   
   
