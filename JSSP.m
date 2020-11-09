@@ -76,8 +76,10 @@ classdef JSSP < handle
 %          vector(index)=[];
 %          heurID=[heurID vector]
         end
+        
         function allInstances = TailorInstances(nbInstances, InstanceKind, varargin)
-            if InstanceKind==1 %AllvsOne/OnevsAll 
+            switch InstanceKind
+                case 1 %AllvsOne/OnevsAll 
                 if length(varargin) <1
                     heurID=input("You neeed to introduce an Heuristic ID (1: LPT, 2: SPT, 3: MPA, 4: LPA")
                 else
@@ -96,22 +98,22 @@ classdef JSSP < handle
                 if length(varargin) >= 7, toSave = varargin{7}; else, toSave = true; end
                 if length(varargin) == 8
                     delta = varargin{8};
-                    Parameters=JSSP.GetParameters(heurID,objective,1);
+                    UPSOParameters=JSSP.GetParameters(heurID,objective,1);
                 else
-                    Parameters=JSSP.GetParameters(heurID,objective);
+                    UPSOParameters=JSSP.GetParameters(heurID,objective);
                 end
 
-                population=Parameters(1);
-                selfconf=Parameters(2);
-                globalconf=Parameters(3);
-                unifyfactor=Parameters(4);
+                population=UPSOParameters(1);
+                selfconf=UPSOParameters(2);
+                globalconf=UPSOParameters(3);
+                unifyfactor=UPSOParameters(4);
                 vector=JSSP.getHeurID(heurID);
 
          
                 allInstances = TaskManagerPrueba_Advanced(nbJobs,nbMachines,timeRanges,population,selfconf, globalconf,...
                             unifyfactor, nbInstances, vector, objective, folder);
             
-            elseif InstanceKind==2 %Feature Oriented
+                case 2 %Feature Oriented
                 if length(varargin) <1
                     featID=input("You neeed to introduce an Feature ID (1: Mirsh175, 2: Mirsh15, 3: Mirsh29, 4: Mirsh282, 5: Mirsh95")
                 else
@@ -142,10 +144,12 @@ classdef JSSP < handle
                 end
                 disp("The reached values are:")
                 disp(featValues)
+              otherwise 
+              disp("function has not been implemented yet")
              end
         end
         
-        function allInstances = TailorInstancesFeat(nbInstances, featID, ,objective, target, varargin)
+        function allInstances = TailorInstancesFeat(nbInstances, featID,objective, target, varargin)
             if length(varargin) >= 1, folder = varargin{1}; else, folder=pwd; end
             if length(varargin) >= 2, nbJobs = varargin{2}; else, nbJobs =3; end
             if length(varargin) >= 3, nbMachines = varargin{3}; else, nbMachines =4; end
@@ -165,6 +169,7 @@ classdef JSSP < handle
             end
             disp("The reached values are:")
             disp(featValues)
+           
         end
         
         
@@ -216,59 +221,69 @@ classdef JSSP < handle
             end
         end
         
-        function heurMax(instance)
-            pos = instance.findBiggestItem();
-            instance.moveItemAcrossSets(pos);
-        end
-        
-        function heurMin(instance)
-            pos = instance.findSmallestItem();
-            instance.moveItemAcrossSets(pos);
-        end
-        
-        function heur2Max(instance)
-            pos = instance.findSecondBiggestItem();
-            instance.moveItemAcrossSets(pos);
-        end 
-        
-        function heur2Min(instance)
-            pos = instance.findSecondSmallestItem();
-            instance.moveItemAcrossSets(pos);
-        end 
-        
-        function heurMedian(instance)
-            pos = instance.findMedianItem();
-            instance.moveItemAcrossSets(pos);
-        end 
-   
-        function solveWithHeuristic(instance, heuristicID)
-            while (instance.features < 0.5)
-                BalancedPartition.stepHeuristic(instance, heuristicID);
-            end
-            instance.status = 'Solved';
-        end
-        
-        function stepHeuristic(instance, heuristicID)
-            if ~strcmp(instance.status,'In Progress'), instance.status = 'In Progress'; end
-            switch heuristicID
+      function heurLPA(instance,objective, varargin) %objective (1: step, 2: solve)
+         toPlot = false;
+         if nargin == 3, toPlot = varargin{1}; end
+            
+            switch objective
                 case 1
-                    BalancedPartition.heurMax(instance);
-                case 2
-                    BalancedPartition.heurMin(instance);
-                case 3 
-                    BalancedPartition.heur2Max(instance); 
-                case 4 
-                    BalancedPartition.heur2Min(instance); 
-                case 5    
-                    BalancedPartition.heurMedian(instance);
+                    JSSPStepInstance(instance, 4, toPlot)
+                case 2 
+                    JSSPSolveInstance(instance, 4, toPlot)
                 otherwise
-                    error('There is no %d code for the heuristic. Remember they begin at 1!\n', heuristicID)
-            end
-            if instance.features >= 0.5, instance.status = 'Solved'; end
+                    disp("objective must be either 1 or 2")
+            end             
+       end
+        
+      
+        
+       function heurMPA(instance,objective, varargin) %objective (1: step, 2: solve)
+         toPlot = false;
+         if nargin == 3, toPlot = varargin{1}; end
+            
+            switch objective
+                case 1
+                    JSSPStepInstance(instance, 3, toPlot)
+                case 2 
+                    JSSPSolveInstance(instance, 3, toPlot)
+                otherwise
+                    disp("objective must be either 1 or 2")
+            end             
+       end
+       
+        function heurSPT(instance,objective, varargin) %objective (1: step, 2: solve)
+         toPlot = false;
+         if nargin == 3, toPlot = varargin{1}; end
+            
+            switch objective
+                case 1
+                    JSSPStepInstance(instance, 2, toPlot)
+                case 2 
+                    JSSPSolveInstance(instance, 2, toPlot)
+                otherwise
+                    disp("objective must be either 1 or 2")
+            end             
         end
+       
+         function heurLPT(instance,objective, varargin) %objective (1: step, 2: solve)
+         toPlot = false;
+         if nargin == 3, toPlot = varargin{1}; end
+            
+            switch objective
+                case 1
+                    JSSPStepInstance(instance, 1, toPlot)
+                case 2 
+                    JSSPSolveInstance(instance, 1, toPlot)
+                otherwise
+                    disp("objective must be either 1 or 2")
+            end             
+         end
+       
+         
+      
         
         function s = disp()
-            s = sprintf('Balanced Partition');
+            s = sprintf('Job Shop Scheduling Problem');
         end
     
     end        

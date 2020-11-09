@@ -3,8 +3,9 @@
 % 2: SPT
 % 3: MPA
 % 4: LPA
-function [] = JSSPStepInstance (instance, heurID)
-
+function [] = JSSPStepInstance (instance, heurID, varargin)
+toPlot = false;
+if nargin == 3, toPlot = varargin{1}; end
 if heurID==1
     NextActivity =JSSPHeurLPT(instance);
 elseif heurID==2
@@ -18,5 +19,7 @@ else
     return 
 end
     instance.scheduleJob(NextActivity)
-    %instance.plot
+if toPlot==true 
+instance.plot
+end
 end

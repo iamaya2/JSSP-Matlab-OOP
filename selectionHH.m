@@ -58,7 +58,7 @@ classdef selectionHH < handle
                     obj.targetProblem = dummyProblem;
                     obj.availableSolvers = dummyProblem.problemSolvers;
                 case 'job shop scheduling'
-                    dummyProblem= JobShopScheduling();
+                    dummyProblem= JSSP();
                     obj.targetProblem = dummyProblem;
                     obj.availableSolvers = dummyProblem.problemSolvers;
                 otherwise
