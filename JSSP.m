@@ -3,7 +3,8 @@ classdef JSSP < handle
     properties        
         instances           = JSSPInstance();
         problemSolvers      = {'1:LPT', '2:SPT','3:MPA','4:LPA'};
-        problemType         = 'JSSP';        
+        problemType         = 'JSSP';    
+        problemFeatures     = {'1:Mirsh175', '2:Mirsh15','3:Mirsh29','4:Mirsh282', '5:Mirsh95'};
     end
     
        properties (Dependent)
@@ -21,7 +22,7 @@ classdef JSSP < handle
     
     methods (Static)
         function newInstance = cloneInstance(JSSPInstance)
-            newInstance = createJSSPInstanceFromInstance(JSSPInstance)
+            newInstance = createJSSPInstanceFromInstance(JSSPInstance);
         end
         
         function instance = createDummyInstance()
@@ -279,8 +280,12 @@ classdef JSSP < handle
             end             
          end
        
-         
-      
+         function stepHeuristic(instance, heurID, varargin)
+             toPlot = false;
+             if nargin == 3, toPlot = varargin{1}; end
+             JSSPStepInstance(instance, heurID, toPlot)
+         end
+        
         
         function s = disp()
             s = sprintf('Job Shop Scheduling Problem');

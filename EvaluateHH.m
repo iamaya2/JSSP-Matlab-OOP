@@ -1,4 +1,4 @@
-function [performanceData] = EvaluateHH(generatedRules,HH, instances)
+function [performanceData] = EvaluateHH_Knapsack(generatedRules,HH, instances)
 profit = 0;
 for x=1:size(instances,2)
 

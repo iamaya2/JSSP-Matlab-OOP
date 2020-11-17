@@ -12,6 +12,7 @@ classdef ruleBasedSelectionHH < selectionHH
     featurevalues
     heuristicVector
     HHRules
+    instances
     end
     
     properties (Dependent)
@@ -25,15 +26,18 @@ classdef ruleBasedSelectionHH < selectionHH
         % ----- ---------------------------------------------------- -----
         % Constructor
         % ----- ---------------------------------------------------- -----
-        function obj = ruleBasedSelectionHH(Rules, Features, Heuristics)            
+        function obj = ruleBasedSelectionHH(Rules, targetProblem)            
             % Function for creating a rule-based selection hyper-heuristic
             obj.hhType = 'Rule-based';
-            if nargin > 0
+            if nargin >= 1
                 obj.nbRules = Rules;
-                obj.nbFeatures = Features;
-                obj.nbSolvers = Heuristics;
+            end
+            if nargin ==2
+                obj.assignProblem(targetProblem)
+%                 obj.nbFeatures = length(obj.availableFeatures);
+%                 obj.nbSolvers = length(obj.availableSolvers);
                 % Put something here in case a constructor is required...
-                obj.initializeModel(Rules,Features,Heuristics);
+                obj.initializeModel(Rules,obj.nbFeatures, obj.nbSolvers);
             end
         end              
         
@@ -45,11 +49,61 @@ classdef ruleBasedSelectionHH < selectionHH
 
         
         % ----- Instance seeker
-        function getInstances(obj, instanceType)
+        function allinstances = getInstances(obj, instanceType, varargin)
             % GETINSTANCES  Method for extracting one kind of instances from the model (not yet implemented)
             %  instanceType: String containing the kind of instances that
             %  will be extracted. Can be: Training, Testing
-            
+             switch  lower(instanceType)
+              
+                case 'preliminary'
+                    addpath(genpath('InstanceRepository/PreliminaryInstances'))
+                    if nargin == 3 
+                        ChoseInstances=varargin{1};
+                    else 
+                       warning("Must choose one of three kind of preliminary instances: 1 - LPTvsSPT, 2 - SPTvsLPT, 3 - Random");
+                       ChoseInstances=input("Write the kind of preliminary instances to load");
+                    end
+%                     disp(ChoseInstances) 
+                    switch ChoseInstances 
+                        case 1
+                            for idx=1:30
+                                address="JSSPInstanceJ3M4T10T210Rep"+num2str(idx)+"LPTvsSPT.mat";
+                                JSSPInstance = {};
+                                load(address)
+%                                 allinstances{idx}=import(address);
+                                allinstances{idx}=JSSPInstance{1};
+                            end
+                        case 2
+                            for idx=1:30
+                                address="JSSPInstanceJ3M4T10T210Rep"+num2str(idx)+"SPTvsLPT.mat";
+                                JSSPInstance = {};
+                                load(address)
+%                                 allinstances{idx}=import(address);
+                                allinstances{idx}=JSSPInstance{1};
+                            end
+                        case 3
+                            for idx=1:30
+                                address=["GeneratedJSSPInstance_2020_May_27_19_04_33_3jobs_4machs_Inst"+num2str(idx)+".mat"];
+                                instance = {};
+                                load(address)
+%                                 allinstances{idx}=import(address);
+                                allinstances{idx}=instance;
+                            end
+                        otherwise
+                            warning("Selected preliminary instance kind is not defined, program will load 30 random instances by default")
+                            for idx=1:30
+                                address="GeneratedJSSPInstance_2020_May_27_19_04_33_3jobs_4machs_Inst"+num2str(idx)+".mat";
+                                instance = {};
+                                load(address)
+%                                 allinstances{idx}=import(address);
+                                allinstances{idx}=instance;
+                            end    
+                    end        
+                otherwise
+                    warning("defined instance Types: {'preliminary'}")
+                    
+             end 
+             obj.instances=allinstances;
         end 
         
         
@@ -57,24 +111,50 @@ classdef ruleBasedSelectionHH < selectionHH
         function closestRule = getClosestRule(obj, instance)
             % INITIALIZEMODEL  Method for generating a random solution for
             % the current hh model
-            
+          switch obj.problemType
+                case 'JSSP'  
+                    for f=1:obj.nbFeatures
+                        featureValues(f)=CalculateFeature(instance, f);
+                    end
+                    instance.features=featureValues;
+          end          
             %allDistances = dist2(obj.value(:,1:end-1),repmat(instance.features,obj.nbRules,1));
             for i = 1:size(obj.value,1)
       
-                  dist(i)  = sqrt(sum((obj.featurevalues(i,:) - instance.features) .^ 2));
+                  dist(i)  = sqrt(sum((obj.value(i,1:end-1) - instance.features) .^ 2));
             end 
             [~, closestRule] = min(dist);            
         end
         
         % Tests a given hh model (candidate) to see if it is good. Requires
         % that the new model preserves the number of rules and features
-        function fitness = evaluateCandidateSolution(obj, solution)
-            currentModel = reshape(solution, obj.nbRules, obj.nbFeatures+1);
-            currentModel(:,end) = round(currentModel(:,end)); % Translates to action IDs 
-            obj.setModel(currentModel)
-            solvedInstances = obj.solveInstanceSet(obj.trainingInstances);
-            allInstances  = [solvedInstances{:}];
-            fitness = sum([allInstances.fitness]);
+        function fitness = evaluateCandidateSolution(obj, solution, instances)
+            switch obj.problemType
+                case 'JSSP'
+                    
+                    currentModel = reshape(solution, obj.nbRules, obj.nbFeatures+1);
+                    currentModel(:,end) = round(currentModel(:,end)); % Translates to action IDs 
+                    obj.setModel(currentModel)
+                  
+                    SolvedInstances=obj.solveInstanceSet(instances);
+                    fitness=0;
+                    %fitness = sum([obj.instances.solution.makespan]);
+                     for i=1:length(instances)
+                         fitness=fitness + SolvedInstances{i}.solution.makespan;
+                         %instances{i}.reset
+                     end
+                      
+                    
+                otherwise     
+                    
+                    currentModel = reshape(solution, obj.nbRules, obj.nbFeatures+1);
+                    currentModel(:,end) = round(currentModel(:,end)); % Translates to action IDs 
+                    obj.setModel(currentModel)
+                    disp(obj.value)
+                    solvedInstances = obj.solveInstanceSet(obj.trainingInstances);
+                    allInstances  = [solvedInstances{:}];
+                    fitness = sum([allInstances.fitness]);
+            end    
         end
         
         % ----- Model initializer
@@ -100,13 +180,13 @@ classdef ruleBasedSelectionHH < selectionHH
 %         end 
         
         % ----- Print overloader for disp()
-        function printExtraData(obj)            
-            fprintf('\tCurrent model:       \n\t')
-            modelString = repmat('\t%.4f', 1, obj.nbFeatures+1);
-            modelString = [modelString '\n\t'];
-            fprintf(modelString, obj.value')
-            fprintf('\n');
-        end
+%         function printExtraData(obj)            
+%             fprintf('\tCurrent model:       \n\t')
+%             modelString = repmat('\t%.4f', 1, obj.nbFeatures+1);
+%             modelString = [modelString '\n\t'];
+%             fprintf(modelString, obj.value')
+%             fprintf('\n');
+%         end
         
         % ----- Model setter
         function setModel(obj, model)
@@ -114,30 +194,35 @@ classdef ruleBasedSelectionHH < selectionHH
             obj.value = model;
             [obj.nbRules, obj.nbFeatures] = size(model); 
             obj.nbFeatures = obj.nbFeatures -1; % Fix for the action column
-            obj.nbSolvers = max(model(:,end)); % At least the max action
+            %obj.nbSolvers = max(model(:,end)); % At least the max action
         end 
                 
         % ----- Hyper-heuristic solver
-        function [instance] = solveInstance(obj, instance, RuleMatrix,HHRules)
+        function SolvedInstance = solveInstance(obj, instance)
             % SOLVEINSTANCE  Method for solving a single instance with the current version of the HH (not yet implemented)            
             counter = 1;
-           
-            obj.featurevalues=RuleMatrix;
-            obj.value=HHRules;
-            heuristicVector2=[""];
+            
+            
+            heuristicVector2=[]; % se necesita modificar para tener el historial de todas las heuristicas sobre todas las instancias
             while ~strcmp(instance.status, 'Solved')
                 activeRule = obj.getClosestRule(instance);
                 heuristicID = obj.value(activeRule,end);
                 heuristicVector2(counter) = heuristicID;
                 counter = counter +1;
-                %obj.targetProblem.stepHeuristic(instance, heuristicID);
-                instance.stepInstance(heuristicID);
+                obj.targetProblem.stepHeuristic(instance, heuristicID);
+                %instance.stepInstance(heuristicID);
             end     
-            disp(heuristicVector2)
+            %disp(heuristicVector)
             obj.heuristicVector=heuristicVector2;
+            SolvedInstance = instance;
         end 
         
-        
+        function solveInstanceSet_noCloning(obj,instances)
+            for i=1:length(instances)
+                obj.solveInstance(instances{i})
+            end
+        end
+                
         
                
         
@@ -176,28 +261,38 @@ classdef ruleBasedSelectionHH < selectionHH
         end
         
         % ----- Hyper-heuristic trainer        
-        function [position,fitness,details] = train(obj, criterion, parameters)
+        function [position,fitness,details] = train(obj, criterion, varargin)
             % TRAIN  Method for training the HH (not yet implemented)
             %   criterion: Type of criterion that will be used for stopping training (e.g. iteration or stagnation)
             %   parameters: Parameters associated to the stopping criterion (e.g. nbIter or the deltas and such)
             %
             %   See also DISP (ignore that).
-            
-            % Test run using UPSO
-            nbSearchDimensionsFeatures  = obj.nbRules*obj.nbFeatures;
-            nbSearchDimensionsActions   = obj.nbRules;
-            fh = @(x)obj.evaluateCandidateSolution(x); % Evaluates a given solution
-            flimFeatures = repmat([0 1], nbSearchDimensionsFeatures, 1 ); % First features, then actions
-            flimActions  = repmat([1 obj.nbSolvers], nbSearchDimensionsActions, 1);
-            flim = [flimFeatures; flimActions];
-            
-            % UPSO properties definition
-            properties = struct('visualMode', true, 'verboseMode', true, ...
-                'populationSize', 15, 'maxIter', 50, 'maxStagIter', 100, ...
-                'selfConf', 2, 'globalConf', 2.5, 'unifyFactor', 0.25);
-            % Call to the optimizer
-            [position,fitness,details] = UPSO2(fh, flim, properties);
-            obj.evaluateCandidateSolution(position);
+            switch criterion 
+                case 1
+                     if length(varargin) >= 1, maxIter = varargin{1}; else, maxIter =100; end
+                     if length(varargin) >= 2, populationSize = varargin{2}; else, populationSize =30; end
+                     if length(varargin) >= 3, selfConf = varargin{3}; else,  selfConf=1.5; end %must be an array of two elements
+                     if length(varargin) >= 4, globalConf = varargin{4}; else, globalConf=1.5; end
+                     if length(varargin) >= 5, unifyFactor = varargin{5}; else, unifyFactor=0.5; end
+                     if length(varargin) == 6, visualMode = varargin{6}; else,visualMode=false; end
+                    % Test run using UPSO
+                    nbSearchDimensionsFeatures  = obj.nbRules*obj.nbFeatures;
+                    nbSearchDimensionsActions   = obj.nbRules;
+                    fh = @(x)obj.evaluateCandidateSolution(x,obj.instances); % Evaluates a given solution
+                    flimFeatures = repmat([0 1], nbSearchDimensionsFeatures, 1 ); % First features, then actions
+                    flimActions  = repmat([1 obj.nbSolvers], nbSearchDimensionsActions, 1);
+                    flim = [flimFeatures; flimActions];
+
+                    % UPSO properties definition
+                    properties = struct('visualMode', visualMode, 'verboseMode', true, ...
+                        'populationSize', populationSize, 'maxIter', maxIter, 'maxStagIter', 20, ...
+                        'selfConf', selfConf, 'globalConf', globalConf, 'unifyFactor', unifyFactor);
+                    % Call to the optimizer
+                    [position,fitness,details] = UPSO2(fh, flim, properties);
+                    obj.evaluateCandidateSolution(position,obj.instances);
+                otherwise
+                    error("a criterion must be set: 1.-number of iterations")
+            end
         end        
         
 

@@ -6,9 +6,11 @@ classdef selectionHH < handle
     properties
         availableFeatures            ; % String vector of features that can be used for analyzing the problem state
         availableSolvers             ; % String vector of solvers (heuristics) that can be used for tackling each problem state
+        
         hhType          = 'Undefined'; % Type of HH that will be used. Can be: Undefined (when new), Rule-based, Sequence-based, or others (pending update)
         status          = 'New'; % HH status. Can be: New, Trained
         targetProblem   = 'Undefined'; % Problem domain for the HH. Can be: Undefined (when new), JSSP, or others (pending update)
+        problemType     = 'Undefined'; % Problem type name
         testingInstances             ; % Instances used for testing. Vector of instances of the targetProblem
         testingPerformance           ; % Structure with a vector containing the final solutions achieved for each instance of the training set. Also contains the accumulated performance data (over all instances) and the statistical data (across instances)
         trainingInstances            ; % Instances used for training. Vector of instances of the targetProblem        
@@ -61,6 +63,10 @@ classdef selectionHH < handle
                     dummyProblem= JSSP();
                     obj.targetProblem = dummyProblem;
                     obj.availableSolvers = dummyProblem.problemSolvers;
+                    obj.availableFeatures = dummyProblem.problemFeatures;
+                    obj.nbFeatures=length(obj.availableFeatures);
+                    obj.nbSolvers=length(obj.availableSolvers);
+                    obj.problemType="JSSP";
                 otherwise
                     error('Problem %s has not been implemented yet!', problemType)
             end
@@ -216,7 +222,9 @@ classdef selectionHH < handle
         
         function printExtraData(obj)
             % Replace this with the HH specific information
-            fprintf('\tCurrent model:       %s\n', obj.value)
+            %fprintf('\tCurrent model:       %s\n', obj.value)
+            disp("Current method:")
+            disp(obj.value)
         end
         
     end

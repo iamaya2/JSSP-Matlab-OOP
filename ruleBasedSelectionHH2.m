@@ -42,6 +42,14 @@ classdef ruleBasedSelectionHH2 < ruleBasedSelectionHH
             % GETINSTANCES  Method for extracting one kind of instances from the model (not yet implemented)
             %  instanceType: String containing the kind of instances that
             %  will be extracted. Can be: Training, Testing
+       
+            switch  lower(instanceType)
+              
+                case 'preliminary'
+                    addpath(genpath('/InstanceRepository'))
+                otherwise
+                    disp("defined instanceType: 'preliminary'")
+            end    
             
         end 
         

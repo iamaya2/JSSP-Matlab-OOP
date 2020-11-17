@@ -1,4 +1,6 @@
-function [Instance] = InstanceLoader (directory,filename,nbinstances) 
+function [Instance] = InstanceLoader (directory,filename,nbinstances, varargin) 
+toSave = false;
+if nargin == 4, toSave = varargin{1}; end
 newpath= genpath(directory)
 addpath(newpath)
 taillard=importdata(filename);
@@ -13,11 +15,13 @@ for idx=1:nbinstances
    oldfolder=cd(directory2)
    Instance(:,:,idx,1) = {importdata(filename,delimiterIn,headerlinesIn)};
    Instance(:,:,idx,2) = {importdata(filename,delimiterIn,headerlinesIn+nbjobs+1)};
-    headerlinesIn = idx*(2*nbjobs + 4)+3;
+   headerlinesIn = idx*(2*nbjobs + 4)+3;
     I=Instance(:,:,idx,:);
     filename2 = "JSSPInstanceJ"+num2str(nbjobs)+"M"+num2str(nbmachines)+"T11T299Rep"+num2str(idx);
     oldfolder=cd(newdir)
-    save(filename2,'I')
+       if toSave, save(filename2,'I');
+        
+    
 end
 
 

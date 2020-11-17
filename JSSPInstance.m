@@ -10,7 +10,7 @@ classdef JSSPInstance < handle
         solution % JSSPSchedule object with the current solution
         instanceData = JSSPJob(); % JSSPJob array with the original instance
         pendingData = JSSPJob(); % JSSPJob array with what remains of the instance
-        features = 'Not yet implemented. Should be updated with empty feature vector';        
+        features = [];        
         rawInstanceData
     end
     
