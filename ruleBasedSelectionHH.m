@@ -114,7 +114,7 @@ classdef ruleBasedSelectionHH < selectionHH
           switch obj.problemType
                 case 'JSSP'  
                     for f=1:obj.nbFeatures
-                        featureValues(f)=CalculateFeature(instance, f);
+                        featureValues(f)=normalizeFeature(CalculateFeature(instance, f),f);
                     end
                     instance.features=featureValues;
           end          
@@ -128,7 +128,12 @@ classdef ruleBasedSelectionHH < selectionHH
         
         % Tests a given hh model (candidate) to see if it is good. Requires
         % that the new model preserves the number of rules and features
-        function fitness = evaluateCandidateSolution(obj, solution, instances)
+        function fitness = evaluateCandidateSolution(obj, solution, varargin)
+            if length(varargin)==1 
+                instances = varargin{1};
+            else
+                instances = obj.instances
+            end
             switch obj.problemType
                 case 'JSSP'
                     
@@ -217,6 +222,26 @@ classdef ruleBasedSelectionHH < selectionHH
             SolvedInstance = instance;
         end 
         
+        function Instance = step(obj, instance)
+            % SOLVEINSTANCE  Method for solving a single instance with the current version of the HH (not yet implemented)            
+            counter = 1;
+            
+            
+            heuristicVector2=[]; % se necesita modificar para tener el historial de todas las heuristicas sobre todas las instancias
+            
+                activeRule = obj.getClosestRule(instance);
+                heuristicID = obj.value(activeRule,end);
+                heuristicVector2(counter) = heuristicID;
+                counter = counter +1;
+                obj.targetProblem.stepHeuristic(instance, heuristicID);
+                %instance.stepInstance(heuristicID);
+              
+            %disp(heuristicVector)
+            obj.heuristicVector=heuristicVector2;
+            Instance = instance;
+        end 
+        
+        
         function solveInstanceSet_noCloning(obj,instances)
             for i=1:length(instances)
                 obj.solveInstance(instances{i})
@@ -270,10 +295,10 @@ classdef ruleBasedSelectionHH < selectionHH
             switch criterion 
                 case 1
                      if length(varargin) >= 1, maxIter = varargin{1}; else, maxIter =100; end
-                     if length(varargin) >= 2, populationSize = varargin{2}; else, populationSize =30; end
-                     if length(varargin) >= 3, selfConf = varargin{3}; else,  selfConf=1.5; end %must be an array of two elements
-                     if length(varargin) >= 4, globalConf = varargin{4}; else, globalConf=1.5; end
-                     if length(varargin) >= 5, unifyFactor = varargin{5}; else, unifyFactor=0.5; end
+                     if length(varargin) >= 2, populationSize = varargin{2}; else, populationSize =15; end
+                     if length(varargin) >= 3, selfConf = varargin{3}; else,  selfConf=2; end %must be an array of two elements
+                     if length(varargin) >= 4, globalConf = varargin{4}; else, globalConf=2.5; end
+                     if length(varargin) >= 5, unifyFactor = varargin{5}; else, unifyFactor=0.25; end
                      if length(varargin) == 6, visualMode = varargin{6}; else,visualMode=false; end
                     % Test run using UPSO
                     nbSearchDimensionsFeatures  = obj.nbRules*obj.nbFeatures;
@@ -285,7 +310,7 @@ classdef ruleBasedSelectionHH < selectionHH
 
                     % UPSO properties definition
                     properties = struct('visualMode', visualMode, 'verboseMode', true, ...
-                        'populationSize', populationSize, 'maxIter', maxIter, 'maxStagIter', 20, ...
+                        'populationSize', populationSize, 'maxIter', maxIter, 'maxStagIter', maxIter, ...
                         'selfConf', selfConf, 'globalConf', globalConf, 'unifyFactor', unifyFactor);
                     % Call to the optimizer
                     [position,fitness,details] = UPSO2(fh, flim, properties);

@@ -1,11 +1,11 @@
 function[FeatureValue] = Mirsh282(JSSPInstance)
 
- InstanceData=JSSPInstance.rawInstanceData;
+ InstanceData=JSSPInstance.updatingData;
  
-  for a=1:JSSPInstance.nbMachines
+  for a=1:size(InstanceData(:,:,1),2)
      subML=0;
      iZeros=0;
-     for c=1:JSSPInstance.nbMachines
+     for c=1:size(InstanceData(:,:,1),2)
          iRep=0;
                      for d=1:JSSPInstance.nbJobs
                             if InstanceData(d,c,2)==a 
@@ -24,6 +24,6 @@ function[FeatureValue] = Mirsh282(JSSPInstance)
      ML(a)=iZeros;
      
   end
-FeatureValue= mean(ML)/JSSPInstance.nbMachines;
+FeatureValue= mean(ML)/size(InstanceData(:,:,1),2);
   
   

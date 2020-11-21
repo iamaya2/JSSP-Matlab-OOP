@@ -12,6 +12,8 @@ classdef JSSPInstance < handle
         pendingData = JSSPJob(); % JSSPJob array with what remains of the instance
         features = [];        
         rawInstanceData
+        updatingData
+        jobRegister
     end
     
     properties (Dependent)
@@ -45,6 +47,10 @@ classdef JSSPInstance < handle
                 instance.status = 'Pending';
                 instance.solution = JSSPSchedule(instance.nbMachines, instance.nbJobs);                
                 instance.rawInstanceData = instanceData;
+                instance.updatingData = instanceData;
+                for i=1:size(instanceData(:,:,1))
+                    instance.jobRegister(i)=0
+                end
             end
         end
         
@@ -52,6 +58,10 @@ classdef JSSPInstance < handle
         % Job scheduler
         % ----- ---------------------------------------------------- -----
         function scheduleJob(obj, jobID)
+            obj.jobRegister(jobID)=obj.jobRegister(jobID)+1;
+            obj.updatingData(jobID,obj.jobRegister(jobID),1)=0;
+            obj.updatingData(jobID,obj.jobRegister(jobID),2)=0;
+            
             jts = obj.pendingData(jobID); % Job to schedule
             ts = obj.solution.getTimeslot(jts); % Timeslot
             obj.solution.scheduleJob(jts, ts);
@@ -75,6 +85,10 @@ classdef JSSPInstance < handle
             end
             obj.status = 'Pending';
             obj.solution = JSSPSchedule(obj.nbMachines, obj.nbJobs);
+            obj.updatingData=obj.rawInstanceData;
+            for i=1:size(obj.rawInstanceData(:,:,1),1)
+                    obj.jobRegister(i)=0
+            end
         end
         
         % ----- ---------------------------------------------------- -----
