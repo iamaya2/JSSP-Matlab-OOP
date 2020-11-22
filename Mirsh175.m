@@ -49,7 +49,11 @@ function[FeatureValue] = Mirsh175(JSSPInstance)
                 OPT= OPT + InstanceData(d,c,1);
             end
         end
-        meanOPT = OPT/(size(InstanceData(:,:,1),2)*JSSPInstance.nbJobs);
+        calls=0;
+        for d=1:length(JSSPInstance.jobRegister)
+            calls=calls+JSSPInstance.jobRegister(d);
+        end
+        meanOPT = OPT/(size(InstanceData(:,:,1),2)*JSSPInstance.nbJobs-calls);
         
         
         FeatureValue=(mean(OSCOMBA)/(size(InstanceData(:,:,1),2)*meanOPT));

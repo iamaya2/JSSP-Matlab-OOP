@@ -123,7 +123,8 @@ classdef ruleBasedSelectionHH < selectionHH
       
                   dist(i)  = sqrt(sum((obj.value(i,1:end-1) - instance.features) .^ 2));
             end 
-            [~, closestRule] = min(dist);            
+            [~, closestRule] = min(dist);
+            disp(dist)
         end
         
         % Tests a given hh model (candidate) to see if it is good. Requires

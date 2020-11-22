@@ -54,6 +54,30 @@ classdef JSSPInstance < handle
             end
         end
         
+        
+        % ----- ---------------------------------------------------- -----
+        % Calculate Features
+        % ----- ---------------------------------------------------- -----
+        function features=gettingFeatures(obj,varargin)
+            if nargin>1 
+                toNormalize=varargin{1};
+            else 
+                toNormalize=false;
+            end
+            
+            if toNormalize==true
+                for x=1:5
+                    features(x)=normalizeFeature(CalculateFeature(obj,x),x);
+                end
+            else
+                for x=1:5
+                    features(x)=CalculateFeature(obj,x);
+                end
+            end
+            
+            obj.features=features
+        end
+        
         % ----- ---------------------------------------------------- -----
         % Job scheduler
         % ----- ---------------------------------------------------- -----
