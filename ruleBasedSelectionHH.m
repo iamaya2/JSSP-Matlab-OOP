@@ -13,6 +13,7 @@ classdef ruleBasedSelectionHH < selectionHH
     heuristicVector
     HHRules
     instances
+    description            % shows training method, and instances used
     end
     
     properties (Dependent)
@@ -39,6 +40,7 @@ classdef ruleBasedSelectionHH < selectionHH
                 % Put something here in case a constructor is required...
                 obj.initializeModel(Rules,obj.nbFeatures, obj.nbSolvers);
             end
+            obj.description = "description unset";
         end              
         
 
@@ -127,6 +129,7 @@ classdef ruleBasedSelectionHH < selectionHH
             disp(dist)
         end
         
+        
         % Tests a given hh model (candidate) to see if it is good. Requires
         % that the new model preserves the number of rules and features
         function fitness = evaluateCandidateSolution(obj, solution, varargin)
@@ -193,7 +196,10 @@ classdef ruleBasedSelectionHH < selectionHH
 %             fprintf(modelString, obj.value')
 %             fprintf('\n');
 %         end
-        
+        function setDescription(obj, description)
+            obj.description = description
+            disp(obj.description)
+        end
         % ----- Model setter
         function setModel(obj, model)
             % SETMODEL  Method for setting the hh model to a fixed matrix
@@ -225,19 +231,31 @@ classdef ruleBasedSelectionHH < selectionHH
         
         function Instance = step(obj, instance)
             % SOLVEINSTANCE  Method for solving a single instance with the current version of the HH (not yet implemented)            
-            counter = 1;
+%             logOp=false; 
+%             for i=1:length(instance.jobRegister)
+%                 if instance.jobRegister(i)>0
+%                     logOp=true;
+%                 end
+%             end
+%             
+%             if logOp==false;
+%                 counter=1;
+%             else
+%                 counter = counter +1;
+%             end
             
+           % disp(counter)
             
             heuristicVector2=[]; % se necesita modificar para tener el historial de todas las heuristicas sobre todas las instancias
             
                 activeRule = obj.getClosestRule(instance);
                 heuristicID = obj.value(activeRule,end);
                 heuristicVector2(counter) = heuristicID;
-                counter = counter +1;
+                %counter = counter +1;
                 obj.targetProblem.stepHeuristic(instance, heuristicID);
                 %instance.stepInstance(heuristicID);
               
-            %disp(heuristicVector)
+            %disp(heuristicVector2)
             obj.heuristicVector=heuristicVector2;
             Instance = instance;
         end 

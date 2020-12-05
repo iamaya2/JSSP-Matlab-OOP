@@ -151,15 +151,18 @@ classdef ruleBasedSelectionHH2 < ruleBasedSelectionHH
                 %instance.stepInstance(heuristicID);
             end     
             %disp(heuristicVector)
-            obj.heuristicVector=heuristicVector2;
+            obj.heuristicVector=heuristicVector3;
             SolvedInstance = instance;
             end     
             
+            function stepInstanceHH(obj,instance)
+                activeRule = obj.getClosestRule(instance);
+                solverID = obj.value(activeRule,end);
+                obj.availableHH(solverID).step(instance);
+            end
         
-       
-        
-        function [Instance] = stepInstance(obj,instance, solverID)
-            Instance=availableHH(solverID).step(instance);                             
+        function [Instance] = stepInstance(obj,instance,solverID)
+            Instance=obj.availableHH(solverID).step(instance);                             
         end
                
         function addHH(obj,solver)
@@ -171,7 +174,10 @@ classdef ruleBasedSelectionHH2 < ruleBasedSelectionHH
         function remHH(obj,solverID) 
             obj.availableHH(solverID)=[];
             
-            obj.nbHH=length(obj.availableHH)      
+            obj.nbHH=length(obj.availableHH)
+            if  obj.nbHH==0 
+                obj.availableHH=[]
+            end
         end
        
         function selectedSolvers = selHH(obj,solvers) 
@@ -216,7 +222,7 @@ classdef ruleBasedSelectionHH2 < ruleBasedSelectionHH
 
                     % UPSO properties definition
                     properties = struct('visualMode', visualMode, 'verboseMode', true, ...
-                        'populationSize', populationSize, 'maxIter', maxIter, 'maxStagIter', 30, ...
+                        'populationSize', populationSize, 'maxIter', maxIter, 'maxStagIter', maxIter, ...
                         'selfConf', selfConf, 'globalConf', globalConf, 'unifyFactor', unifyFactor);
                     % Call to the optimizer
                     [position,fitness,details] = UPSO2(fh, flim, properties);

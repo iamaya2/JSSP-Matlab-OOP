@@ -1,4 +1,4 @@
-function[FeatureValue] = Mirsh175(JSSPInstance)
+function[FeatureValue] = Mirsh222(JSSPInstance)
     InstanceData=JSSPInstance.updatingData;
         for y=1:size(InstanceData(:,:,1),2) %repeat for each operation slot
             subOSCOMBA=0;

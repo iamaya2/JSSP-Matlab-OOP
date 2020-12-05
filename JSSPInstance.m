@@ -49,7 +49,7 @@ classdef JSSPInstance < handle
                 instance.rawInstanceData = instanceData;
                 instance.updatingData = instanceData;
                 for i=1:size(instanceData(:,:,1))
-                    instance.jobRegister(i)=0
+                    instance.jobRegister(i)=0;
                 end
             end
         end
@@ -111,7 +111,7 @@ classdef JSSPInstance < handle
             obj.solution = JSSPSchedule(obj.nbMachines, obj.nbJobs);
             obj.updatingData=obj.rawInstanceData;
             for i=1:size(obj.rawInstanceData(:,:,1),1)
-                    obj.jobRegister(i)=0
+                    obj.jobRegister(i)=0;
             end
         end
         
