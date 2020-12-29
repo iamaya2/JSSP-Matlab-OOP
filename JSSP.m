@@ -235,9 +235,7 @@ classdef JSSP < handle
                     disp("objective must be either 1 or 2")
             end             
        end
-        
-      
-        
+                      
        function heurMPA(instance,objective, varargin) %objective (1: step, 2: solve)
          toPlot = false;
          if nargin == 3, toPlot = varargin{1}; end
