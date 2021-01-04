@@ -1,4 +1,4 @@
-function []= TaskManagerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, heuristicID)
+function []= TaskManagerPrueba(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, heuristicID,folder_name)
 % Parameter initialization
 %nbJobsV = [3]; %number of jobs desired
 %nbMachinesV = [4]; %number of machines desired
@@ -26,12 +26,12 @@ for s=1:length(nbJobsV)
     flim = [repmat(timeRanges,nbJobs*nbMachines,1); repmat([0.01 nbMachines],nbJobs*nbMachines,1)]; % First processing times, then machine IDs
    
     newdir =(heuristicID(1) +"vs"+heuristicID(2)+"_Small");
-    status=mkdir('GeneratedInstances', newdir);
+    status=mkdir(folder_name, newdir);
 
     % UPSO properties definition
     
     for p=1:length(population)
-        oldfolder=cd('GeneratedInstances');
+        oldfolder=cd(folder_name);
 
         oldfolder=cd(newdir);
         newdirpop = char([newdir + "_pop"+ num2str(population(p))]);
@@ -45,7 +45,7 @@ for s=1:length(nbJobsV)
 
 
             oldfolder=cd(directory2);
-            oldfolder=cd('GeneratedInstances');
+            oldfolder=cd(folder_name);
             oldfolder=cd(newdir);
             oldfolder=cd(newdirpop);
             newdirSC =  char([newdirpop + "_SC" + num2str(selfconf(sc))]);
@@ -60,7 +60,7 @@ for s=1:length(nbJobsV)
             for gc=1:length(globalconf)
                 
                 oldfolder=cd(directory2)
-                oldfolder=cd('GeneratedInstances');
+                oldfolder=cd(folder_name);
                 oldfolder=cd(newdir);
                 oldfolder=cd(newdirpop);
                 oldfolder=cd(newdirSC);
@@ -77,7 +77,7 @@ for s=1:length(nbJobsV)
                 for uf=1:length(unifyfactor)
                     
                     oldfolder=cd(directory2)
-                    oldfolder=cd('GeneratedInstances');
+                    oldfolder=cd(folder_name);
                     oldfolder=cd(newdir);
                     oldfolder=cd(newdirpop);
                     oldfolder=cd(newdirSC);
@@ -99,10 +99,10 @@ for s=1:length(nbJobsV)
                         [position,fitness,details] = UPSO2(fh, flim, properties);
                         generatedInstance = UPSOtoJSSP(position,nbJobs);
 
-                        performanceData = EvaluateUPSOtoJSSP(position,nbJobs,heurID )
+                        performanceData = EvaluateUPSOtoJSSP(position,nbJobs,heurID)
                         %directory=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\GeneratedInstances\SPTvsLPT"];
-                        cell={generatedInstance, performanceData};
-                        oldfolder=cd('GeneratedInstances');
+                        JSSPInstance={generatedInstance, performanceData};
+                        oldfolder=cd(folder_name);
                         oldfolder=cd(newdir);
                         oldfolder=cd(newdirpop);
                         oldfolder=cd(newdirSC);
@@ -110,7 +110,7 @@ for s=1:length(nbJobsV)
                         oldfolder=cd(newdirUF);
 
                         filename2 = "JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1))+"T2"+num2str(timeRanges(2))+"Rep"+num2str(idx)+heuristicID(1)+"vs"+heuristicID(2);
-                        save(filename2,'cell')
+                        save(filename2,'JSSPInstance')
 %                         directory2=["C:\Users\nufo\Documents\MATLAB\JSSP-Matlab-OOP-master\"];
                         oldfolder=cd(directory2);
                     end

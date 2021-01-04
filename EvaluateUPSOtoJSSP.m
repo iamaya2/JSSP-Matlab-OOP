@@ -32,7 +32,7 @@ performanceHeur2 = JSSPSolveInstance(JSSPInstanceData,heurID(2));
 
 
 
-performanceData = performanceHeur2 - performanceHeur1;
+performanceData = performanceHeur1 - performanceHeur2;
 
 % Plot if requested
 if toPlot
