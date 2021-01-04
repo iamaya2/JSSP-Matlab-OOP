@@ -10,8 +10,10 @@ classdef JSSPInstance < handle
         solution % JSSPSchedule object with the current solution
         instanceData = JSSPJob(); % JSSPJob array with the original instance
         pendingData = JSSPJob(); % JSSPJob array with what remains of the instance
-        features = 'Not yet implemented. Should be updated with empty feature vector';        
+        features = [];        
         rawInstanceData
+        updatingData
+        jobRegister
     end
     
     properties (Dependent)
@@ -45,13 +47,45 @@ classdef JSSPInstance < handle
                 instance.status = 'Pending';
                 instance.solution = JSSPSchedule(instance.nbMachines, instance.nbJobs);                
                 instance.rawInstanceData = instanceData;
+                instance.updatingData = instanceData;
+                for i=1:size(instanceData(:,:,1))
+                    instance.jobRegister(i)=0;
+                end
             end
+        end
+        
+        
+        % ----- ---------------------------------------------------- -----
+        % Calculate Features
+        % ----- ---------------------------------------------------- -----
+        function features=gettingFeatures(obj,varargin)
+            if nargin>1 
+                toNormalize=varargin{1};
+            else 
+                toNormalize=false;
+            end
+            
+            if toNormalize==true
+                for x=1:5
+                    features(x)=normalizeFeature(CalculateFeature(obj,x),x);
+                end
+            else
+                for x=1:5
+                    features(x)=CalculateFeature(obj,x);
+                end
+            end
+            
+            obj.features=features
         end
         
         % ----- ---------------------------------------------------- -----
         % Job scheduler
         % ----- ---------------------------------------------------- -----
         function scheduleJob(obj, jobID)
+            obj.jobRegister(jobID)=obj.jobRegister(jobID)+1;
+            obj.updatingData(jobID,obj.jobRegister(jobID),1)=0;
+            obj.updatingData(jobID,obj.jobRegister(jobID),2)=0;
+            
             jts = obj.pendingData(jobID); % Job to schedule
             ts = obj.solution.getTimeslot(jts); % Timeslot
             obj.solution.scheduleJob(jts, ts);
@@ -75,6 +109,10 @@ classdef JSSPInstance < handle
             end
             obj.status = 'Pending';
             obj.solution = JSSPSchedule(obj.nbMachines, obj.nbJobs);
+            obj.updatingData=obj.rawInstanceData;
+            for i=1:size(obj.rawInstanceData(:,:,1),1)
+                    obj.jobRegister(i)=0;
+            end
         end
         
         % ----- ---------------------------------------------------- -----
@@ -92,12 +130,15 @@ classdef JSSPInstance < handle
 %                 pTimes(idx,:) = [obj.instanceData(idx).activities.processingTime];
 %                 mOrder(idx,:) = [obj.instanceData(idx).activities.machineID];
 %             end
+        if strcmp(obj.status,"Undefined")
+            fprintf('Undefined Instance\n')
+        else
             fprintf('Processing times (P):\n')
             disp(obj.rawInstanceData(:,:,1))
             fprintf('Machine orderings (M):\n')
             disp(obj.rawInstanceData(:,:,2))
         end
-
+        end
         % ----- ---------------------------------------------------- -----
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----

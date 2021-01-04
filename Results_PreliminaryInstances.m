@@ -1,6 +1,7 @@
 
 
-folder = "HyperMatrix_Pre";
+folder = "PreliminaryStage/PreliminaryInstances";
+addpath(genpath(folder))
 HeurID1 = 1;
 HeurID2 = 2; 
 Population = 10;

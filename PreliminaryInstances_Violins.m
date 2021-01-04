@@ -13,7 +13,20 @@ nbActivititiesPerInstance   = 4;
 
 processingTimeDelta = maxProcessingTime - minProcessingTime;
 machineIDDelta = maxMachineID - minMachineID;
-
+% %% Generate and store instances
+% nbInstancesToGenerate = 30;
+% baseStr = sprintf('GeneratedJSSPInstance_%s_%djobs_%dmachs',getTimeStringForFileStorage,nbJobsPerInstance, nbActivititiesPerInstance);
+% for instanceID = 1 : nbInstancesToGenerate
+%     fileName = sprintf('%s_Inst%d.mat', baseStr, instanceID);
+%     instanceData = nan(nbJobsPerInstance, nbActivititiesPerInstance, 2);
+%     instanceData(:,:,1) = rand(nbJobsPerInstance, nbActivititiesPerInstance)*processingTimeDelta + minProcessingTime;
+%     instanceData(:,:,2) = randi(maxMachineID, nbJobsPerInstance, nbActivititiesPerInstance) - 1 + minMachineID;
+%     instance = JSSPInstance(instanceData);
+%     allInstances{instanceID} = instance;
+%     save(fileName, 'instance', 'maxProcessingTime', 'minProcessingTime', 'maxMachineID', 'minMachineID', 'instanceData');
+%     fprintf('Instance %d / %d successfully generated!\n', instanceID, nbInstancesToGenerate)
+% end
+%%
 nbInstancesToLoad = 30;
 % oldTimeString = '2020_May_27_17_00_16';
 oldTimeString = '2020_May_27_19_04_33';
@@ -66,12 +79,12 @@ for NB=1:nbRep
 address= char("JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1)) ...
                     +"T2"+num2str(timeRanges(2))+"Rep"+num2str(NB)+"LPTvsSPT.mat");
                
-                cell = {};
+               
                 load(address)
                 a=nan;
                 oldfolder=cd(folder)
-                makespan1= makespan(cell{1}, 1);
-                makespan2= makespan(cell{1}, 2);
+                makespan1= makespan(JSSPInstance{1}, 1);
+                makespan2= makespan(JSSPInstance{1}, 2);
                 delta= makespan2-makespan1;
                 
                 Violin_1(NB,1)=delta;
@@ -92,12 +105,12 @@ for NB=1:nbRep
 address= char("JSSPInstanceJ"+num2str(nbJobs)+"M"+num2str(nbMachines)+"T1"+num2str(timeRanges(1)) ...
                     +"T2"+num2str(timeRanges(2))+"Rep"+num2str(NB)+"SPTvsLPT.mat");
                
-                cell = {};
+                
                 load(address)
                 a=nan;
                 oldfolder= cd(folder);
-                makespan1= makespan(cell{1}, 1);
-                makespan2= makespan(cell{1}, 2);
+                makespan1= makespan(JSSPInstance{1}, 1);
+                makespan2= makespan(JSSPInstance{1}, 2);
                 delta= makespan2-makespan1;
                 
                 Violin_2(NB,1)=delta;
@@ -110,9 +123,30 @@ oldfolder= cd(folder);
 PreliminaryViolin(:,1)=violindata(:,1);
 PreliminaryViolin(:,2)=Violin_1(:,1);
 PreliminaryViolin(:,3)=Violin_2(:,1);
+PreliminaryViolin1=violindata(:,1);
+PreliminaryViolin2=Violin_1(:,1);
+PreliminaryViolin3=Violin_2(:,1);
 %%
-CATEGORYNAMES = {"Random" "SPT" "LPT"};
+CATEGORYNAMES = {"Random" "LPT" "SPT"};
     violinplot(PreliminaryViolin, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
-    ylabel("Performance Gap (SPT-LPT)")
-        title("PreliminaryInstances")
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
+ylim([-70 80])
+figure
+CATEGORYNAMES = {"Random"};
+    violinplot(PreliminaryViolin1, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
+ylim([-70 80])
+figure
+CATEGORYNAMES = {"LPT"};
+    violinplot(PreliminaryViolin2, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
+ylim([-70 80])
+figure
+CATEGORYNAMES = {"SPT"};
+    violinplot(PreliminaryViolin3, CATEGORYNAMES, 'width', 0.3, 'violinalpha', 0.55, 'ShowData', false) 
+    ylabel("Makespan difference (SPT-LPT)")
+    xlabel("Instance generation focus")
 ylim([-70 80])

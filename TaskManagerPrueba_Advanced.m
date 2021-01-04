@@ -55,7 +55,7 @@
 
 
 
-function []= TaskManagerPrueba_Advanced(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, objective, folder, varargin)
+function [allInstances]= TaskManagerPrueba_Advanced(nbJobsV,nbMachinesV,timeRanges,population,selfconf, globalconf, unifyfactor, nbRep, heurID, objective, folder, varargin)
 heuristicID=heurIDrepository(heurID); %convert the numeric ID into a three letter string ID, ex. 1-> "LPT" 
 
 
@@ -156,6 +156,7 @@ for s=1:length(nbJobsV)
 
                         performanceData = EvaluateUPSOtoJSSP_Advanced(position,nbJobs,heurID,objective,delta,toPlot);
                         JSSPInstance={generatedInstance, performanceData};
+                        allInstances{idx}=generatedInstance;
                         oldfolder=cd(folder);
                         oldfolder=cd(newdir);
                         

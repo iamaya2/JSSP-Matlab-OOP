@@ -48,7 +48,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             
             %debugging
 %             if machineID == 1
-            if targetJob.jobID == 1
+            if targetJob.jobID == 3
 %                 pause(0.5)
             end
             if isnan(currMakespan) % Fix for when the schedule is too young
@@ -157,7 +157,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
             hold on            
             for idM = 1 : obj.nbMachines %length(obj.schedule)
                 eachMachine = obj.schedule(idM);
-                if ~isempty(eachMachine.makespan)
+                if ~isempty(eachMachine.jobList)
                     for idx = 1 : length([eachMachine.activities])
                         eachActivity = eachMachine.activities(idx);
                         boxwidth = eachActivity.processingTime;
