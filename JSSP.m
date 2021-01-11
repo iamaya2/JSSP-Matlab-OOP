@@ -29,6 +29,29 @@ classdef JSSP < handle
             instance = JSSPInstance();
         end
         
+        % Function that exports a JSSPInstance object as a text file (for
+        % compatibility purposes). It uses the rawInstanceData property,
+        % which contains the hyper-matrix with the related info
+        function exportInstanceAsText(instance, filePath)
+            if strcmp(instance.status,"Undefined")
+                error('The instance is undefined and so it cannot be exported. Aborting...')
+            else
+                fprintf('Exporting instance... ')
+                fileID = fopen(filePath,'w'); % Opens/creates file for output
+                str = ''; str2 = '';
+                for idx = 1 : length(instance.rawInstanceData(:,1,1))
+                    str_    = sprintf('%.50f\t', instance.rawInstanceData(idx,:,1));
+                    str2_   = sprintf('%s\t', num2str(instance.rawInstanceData(idx,:,2)));
+                    str     = sprintf('%s%s\n', str, str_);
+                    str2    = sprintf('%s%s\n', str2, str2_);
+                end
+                instanceText = sprintf('%s\n%s', str, str2);               
+                fprintf(fileID, instanceText);
+                fclose(fileID);
+                fprintf('Success!\n')
+            end        
+        end
+        
         function allInstances = generateRandomInstances(nbInstances, varargin)
             if length(varargin) >= 1, nbJobs = varargin{1}; else, nbJobs =3; end
             if length(varargin) >= 2, nbMachines = varargin{2}; else, nbMachines =4; end
@@ -208,7 +231,7 @@ classdef JSSP < handle
          end
         
         
-            
+        % TO-DO: Change this method for one using JSSPs. This one is for balanced partition    
         function allInstances = loadSavedInstances(nbInstances,varargin)
             nbElements = varargin{1}; nbBitsPerElement = varargin{2}; baseFileName = varargin{3};
             allInstances{nbInstances} = BPInstance(); 
@@ -222,72 +245,72 @@ classdef JSSP < handle
             end
         end
         
-      function heurLPA(instance,objective, varargin) %objective (1: step, 2: solve)
-         toPlot = false;
-         if nargin == 3, toPlot = varargin{1}; end
+        function heurLPA(instance,objective, varargin) %objective (1: step, 2: solve)
+            toPlot = false;
+            if nargin == 3, toPlot = varargin{1}; end
             
             switch objective
                 case 1
                     JSSPStepInstance(instance, 4, toPlot)
-                case 2 
+                case 2
                     JSSPSolveInstance(instance, 4, toPlot)
                 otherwise
                     disp("objective must be either 1 or 2")
-            end             
-       end
-                      
-       function heurMPA(instance,objective, varargin) %objective (1: step, 2: solve)
-         toPlot = false;
-         if nargin == 3, toPlot = varargin{1}; end
+            end
+        end
+        
+        function heurMPA(instance,objective, varargin) %objective (1: step, 2: solve)
+            toPlot = false;
+            if nargin == 3, toPlot = varargin{1}; end
             
             switch objective
                 case 1
                     JSSPStepInstance(instance, 3, toPlot)
-                case 2 
+                case 2
                     JSSPSolveInstance(instance, 3, toPlot)
                 otherwise
                     disp("objective must be either 1 or 2")
-            end             
-       end
-       
+            end
+        end
+        
         function heurSPT(instance,objective, varargin) %objective (1: step, 2: solve)
-         toPlot = false;
-         if nargin == 3, toPlot = varargin{1}; end
+            toPlot = false;
+            if nargin == 3, toPlot = varargin{1}; end
             
             switch objective
                 case 1
                     JSSPStepInstance(instance, 2, toPlot)
-                case 2 
+                case 2
                     JSSPSolveInstance(instance, 2, toPlot)
                 otherwise
                     disp("objective must be either 1 or 2")
-            end             
+            end
         end
-       
-         function heurLPT(instance,objective, varargin) %objective (1: step, 2: solve)
-         toPlot = false;
-         if nargin == 3, toPlot = varargin{1}; end
+        
+        function heurLPT(instance,objective, varargin) %objective (1: step, 2: solve)
+            toPlot = false;
+            if nargin == 3, toPlot = varargin{1}; end
             
             switch objective
                 case 1
                     JSSPStepInstance(instance, 1, toPlot)
-                case 2 
+                case 2
                     JSSPSolveInstance(instance, 1, toPlot)
                 otherwise
                     disp("objective must be either 1 or 2")
-            end             
-         end
-       
-         function stepHeuristic(instance, heurID, varargin)
-             toPlot = false;
-             if nargin == 3, toPlot = varargin{1}; end
-             JSSPStepInstance(instance, heurID, toPlot)
-         end
+            end
+        end
+        
+        function stepHeuristic(instance, heurID, varargin)
+            toPlot = false;
+            if nargin == 3, toPlot = varargin{1}; end
+            JSSPStepInstance(instance, heurID, toPlot)
+        end
         
         
         function s = disp()
             s = sprintf('Job Shop Scheduling Problem');
         end
-    
+        
     end        
 end
