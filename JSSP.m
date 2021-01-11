@@ -1,13 +1,47 @@
-% Class definition for the Job Shop Scheduling Problem
 classdef JSSP < handle
+    % Class definition for the Job Shop Scheduling Problem (JSSP). This class
+    % contains general properties and static methods for handling different
+    % aspects of the JSSP.
+    %   
+    % ---- JSSP Properties: ----
+    % JSSP Properties:
+    %   instances:  Dummy instance for indicating the class of objects
+    %   associated with instances.
+    %   problemFeatures:  Cell array containing a description of the available
+    %   features and the IDs used for using them.
+    %   problemSolvers:  Cell array containing a description of the available
+    %   solvers and the IDs used for them.
+    %   problemType: String with the name of the problem, i.e. JSSP
+    %
+    % ---- JSSP Methods: ----
+    % The following is a list of the non-standard static methods developed for
+    % this class:
+    %   cloneInstance
+    %   createDummyInstance
+    %   exportInstanceAsText
+    %   generateRandomInstances
+    %   GetParameters
+    %   getHeurID
+    %   TailorInstances
+    %   TailorInstancesFeat
+    %   TailorInstances_Advanced
+    %   loadSavedInstances
+    %   heurLPA
+    %   heurLPT
+    %   heurMPA
+    %   heurSPT
+    %   stepHeuristic
+    %   disp
+    %
+    % Use doc JSSP for a more detailed view.
     properties        
-        instances           = JSSPInstance();
-        problemSolvers      = {'1:LPT', '2:SPT','3:MPA','4:LPA'};
-        problemType         = 'JSSP';    
-        problemFeatures     = {'1:Mirsh175', '2:Mirsh15','3:Mirsh29','4:Mirsh282', '5:Mirsh95'};
+        instances           = JSSPInstance(); % Dummy instance for indicating the class of objects associated with instances.
+        problemFeatures     = {'1:Mirsh175', '2:Mirsh15','3:Mirsh29','4:Mirsh282', '5:Mirsh95'}; % Cell array containing a description of the available features and the IDs used for using them.
+        problemSolvers      = {'1:LPT', '2:SPT','3:MPA','4:LPA'}; % Cell array containing a description of the available solvers and the IDs used for them.
+        problemType         = 'JSSP'; % String with the name of the problem, i.e. JSSP
     end
     
-       properties (Dependent)
+    properties (Dependent)
 %         features
 %         fitness
     end
@@ -21,18 +55,39 @@ classdef JSSP < handle
     
     
     methods (Static)
+
         function newInstance = cloneInstance(JSSPInstance)
+            % Static method for duplicating an instance. 
+            % Both of them (original and copy) are independent. It is
+            % recommended to do such a copy before solving an instance, as
+            % to preserve the original, unsolved, instance.
+            % --- Inputs:
+            %      JSSPInstance: Original instance
+            % --- Outputs:
+            %      newInstance: The cloned instance
             newInstance = createJSSPInstanceFromInstance(JSSPInstance);
         end
         
         function instance = createDummyInstance()
+            % Static method for creating an empty instance.
+            % This method can be used whenever an object with the class
+            % information is required. The method has no inputs and returns
+            % an empty JSSP instance.
             instance = JSSPInstance();
         end
         
-        % Function that exports a JSSPInstance object as a text file (for
-        % compatibility purposes). It uses the rawInstanceData property,
-        % which contains the hyper-matrix with the related info
+        
         function exportInstanceAsText(instance, filePath)
+            % Static method for exporting a JSSPInstance as a text file.
+            % This method exports the JSSPInstance object as a text file (for
+            % compatibility purposes). It uses the rawInstanceData property,
+            % which contains the hyper-matrix with the related info. 
+            % --- Inputs:
+            %     instance: The JSSPInstance object to export
+            %     filePath: Path (including filename and extension) where
+            %     the information will be written.
+            % 
+            % This method has no outputs, as it writes directly to a file.
             if strcmp(instance.status,"Undefined")
                 error('The instance is undefined and so it cannot be exported. Aborting...')
             else
@@ -53,6 +108,28 @@ classdef JSSP < handle
         end
         
         function allInstances = generateRandomInstances(nbInstances, varargin)
+            % Statich method for creating random JSSPInstance objects.
+            % --- Inputs:
+            %     nbInstances:  Number of instances to generate
+            %     nbJobs:       Number of jobs for each instance. Default
+            %     value: 3.
+            %     nbMachines:   Number of machines for each instance. Default
+            %     value: 4.
+            %     timeRanges:   Two-element vector (min, max) with the
+            %     processing time that each activity may take. Default
+            %     value: [0 10].
+            %     toSave:       Flag for indicating if the instances will
+            %     be also written to disk. If true, the method uses a
+            %     self-built string using instance parameters and ending
+            %     with the word 'Random'. Default
+            %     value: true.
+            % --- Outputs:
+            %     allInstances: Cell array containing the JSSPInstances
+            %     (one element per instance).
+            % Inputs must be given in the following order: 
+            %   nbInstances, nbJobs, nbMachines, timeRanges, toSave
+            % If an input is not used, subsequent ones cannot be used
+            % either.
             if length(varargin) >= 1, nbJobs = varargin{1}; else, nbJobs =3; end
             if length(varargin) >= 2, nbMachines = varargin{2}; else, nbMachines =4; end
             if length(varargin) >= 3, timeRanges = varargin{3}; else,  timeRanges=[0 10]; end %must be an array of two elements
@@ -173,7 +250,7 @@ classdef JSSP < handle
              end
         end
         
-        function allInstances = TailorInstancesFeat(nbInstances, featID,objective, target, varargin)
+        function allInstances = TailorInstancesFeat(nbInstances, featID, objective, target, varargin)
             if length(varargin) >= 1, folder = varargin{1}; else, folder=pwd; end
             if length(varargin) >= 2, nbJobs = varargin{2}; else, nbJobs =3; end
             if length(varargin) >= 3, nbMachines = varargin{3}; else, nbMachines =4; end
