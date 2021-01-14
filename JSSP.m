@@ -1,9 +1,9 @@
 classdef JSSP < handle
     % JSSP   Class definition for the Job Shop Scheduling Problem (JSSP) 
-    % This class contains general properties and static methods for handling different
-    % aspects of the JSSP.
+    %  This class contains general properties and static methods for handling different
+    %  aspects of the JSSP.
     %   
-    % JSSP Properties:
+    %  JSSP Properties:
     %   instances - Dummy instance for indicating the class of objects
     %   associated with instances.
     %   problemFeatures - Cell array containing a description of the available
@@ -12,7 +12,7 @@ classdef JSSP < handle
     %   solvers and the IDs used for them.
     %   problemType - String with the name of the problem, i.e. JSSP
     %
-    % JSSP Static Methods:
+    %  JSSP Static Methods:
     %  The following is a list of the non-standard static methods developed for
     %  this class:
     %   cloneInstance - 
@@ -32,7 +32,7 @@ classdef JSSP < handle
     %   stepHeuristic - 
     %   disp - 
     %
-    % Use doc JSSP for a more detailed view.
+    %  Use doc JSSP for a more detailed view.
     properties               
         instances           = JSSPInstance(); % Dummy instance for indicating the class of objects associated with instances.
         problemFeatures     = {'1:Mirsh175', '2:Mirsh15','3:Mirsh29','4:Mirsh282', '5:Mirsh95'}; % Cell array containing a description of the available features and the IDs used for using them.
@@ -480,6 +480,19 @@ classdef JSSP < handle
         end
         
         function stepHeuristic(instance, heurID, varargin)
+            % stepHeuristic   Static method for advancing one step of the solution with a given heuristic
+            %  This method uses a heuristic for stepping on the solution of
+            %  a given instance.
+            %   - Inputs:
+            %      instance - JSSPInstance object that will be partially
+            %      solved.
+            %      heurID - ID of the heuristic that will be used for the
+            %      step.
+            %   - Variable inputs: 
+            %      1 - Plotting flag (defaults to false)
+            %   - Outputs: 
+            %      None. This method modifies the instance object directly.
+            %  See also: HEURLPA, HEURLPT, HEURMPA, HEURSPT
             toPlot = false;
             if nargin == 3, toPlot = varargin{1}; end
             JSSPStepInstance(instance, heurID, toPlot)
@@ -487,6 +500,9 @@ classdef JSSP < handle
         
         
         function s = disp()
+            % disp   Overload of the disp() function
+            %  This method returns a string with the full name of the
+            %  domain, i.e. Job Shop Scheduling Problem.
             s = sprintf('Job Shop Scheduling Problem');
         end
         

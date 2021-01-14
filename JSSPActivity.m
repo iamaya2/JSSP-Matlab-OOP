@@ -1,8 +1,21 @@
- %%This class creates activity objects
- % These objects created have to vectors of the same lenght, one with the schedule in terms of
- %machines (machine ID) and other with the processing times of the
- %operations to be processed in those machines (processingTime).
 classdef JSSPActivity < handle
+    % JSSPActivity   Class for creating activity objects
+    %  Each object of this class represents a component (task) that must be
+    %  carried out in order to complete a job of the JSSP instance. So, it
+    %  contains information about the activity itself and about the machine
+    %  where it must be scheduled.
+    %
+    %  JSSPActivity Properties:
+    %   machineID - Information about the machine (its ID) where the
+    %   activity must be scheduled.
+    %   processingTime - 
+    %
+    %  JSSPActivity Methods:
+    %
+    %  These objects created have to vectors of the same lenght, one with the schedule in terms of
+    %  machines (machine ID) and other with the processing times of the
+    %  operations to be processed in those machines (processingTime).
+    %  See also: JSSPJOB, JSSPMACHINE
     properties
         machineID %This property contains a vector with the order in which machines will be scheduled
         processingTime = nan;%This property contains a vector with the processing times of the operations within every job
