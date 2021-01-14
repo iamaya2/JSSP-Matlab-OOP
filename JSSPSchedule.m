@@ -1,11 +1,30 @@
-%% P2
-% Comentar clase acá
 classdef JSSPSchedule < handle  % Only one schedule should be around
+    % JSSPSchedule   Class for handling schedule objects for the JSSP
+    %  This class represents a schedule object with the information of
+    %  machines and activities that have been scheduled. The schedule is
+    %  given by an array of JSSPMachine objects.
+    %
+    %   JSSPSchedule Properties: 
+    %      nbMachines - number of machines
+    %      schedule - Matrix of scheduled activities. Rows: Machines. Columns: Activities
+    %      nbMaxJobs - Number of maximum jobs
+    %      schColorMap - Colormap used for differentiating jobs within the schedule
+    %
+    %   JSSPSchedule Dependent Properties: 
+    %      makespan - The time taken to complete all jobs
+    %
+    %   JSSPSchedule Methods:
+    %      JSSPSchedule(nbMachines, nbMaxJobs) - Constructor. Creates an empty schedule
+    %      getTimeslot(obj, targetJob) - Seeks a valid time for slotting the job with the given ID
+    %      scheduleJob(obj, targetJob, timeslot) - Schedule upcoming activity of job with given ID at the given time slot
+    %      plot(obj, varargin) - Plots the schedule representation
+    %      get.makespan(obj) - Returns the makespan of the current schedule
+        
     properties               
         nbMachines % number of machines
-        schedule = JSSPMachine(); %itinerary matrix of activities. Rows: Machines. Columns: Scheduled activities
-        nbMaxJobs = nan;
-        schColorMap
+        schedule = JSSPMachine(); % Matrix of scheduled activities. Rows: Machines. Columns: Scheduled activities
+        nbMaxJobs = nan; % Number of maximum jobs
+        schColorMap % Colormap used for differentiating jobs within the schedule
     end        
     
     properties (Dependent)
@@ -17,10 +36,10 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % Constructor
         % ----- ---------------------------------------------------- -----
         function jobObj = JSSPSchedule(nbMachines, nbMaxJobs)
-            %Creating an empty schedule
-            %This function assign to the object job the number of machines
-            %avaiable and creates an empty schedule of size equal to the
-            %number of machines
+            % JSSPSchedule   Constructor for creating an empty schedule
+            %  This function assign to the object job the number of machines
+            %  avaiable and creates an empty schedule of size equal to the
+            %  number of machines
             if nargin > 0                
                 jobObj.nbMachines = nbMachines;
                 jobObj.nbMaxJobs = nbMaxJobs;
@@ -38,6 +57,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % ----- ---------------------------------------------------- -----
         %function timeIndex = getTimeslot(obj, machineID, activityLength)            
         function timeIndex = getTimeslot(obj, targetJob)            
+            % getTimeslot   Seeks a valid time for slotting the job with the given ID
             if isempty([targetJob.activities.machineID])
                 error('Error! Job has been completely scheduled... Aborting!')                
             end
@@ -126,7 +146,7 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         
         
         function scheduleJob(obj, targetJob, timeslot)
-            % Schedule next Job in agenda       
+            % scheduleJob   Schedule upcoming activity of job with given ID at the given time slot
             selAct = targetJob.popActivity();
             machineID = selAct.machineID;
             thisMachine = obj.schedule(machineID);            
@@ -146,7 +166,8 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % Methods for overloading functionality
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
-            %plotting the schedule representation
+            % plot    Plots the schedule representation
+            
 %             disp('Not yet implemented...')
 %             heatmap(obj.schedule); % temp... change this to make similar effect with decimal values            
             figure, colormap(obj.schColorMap)
@@ -183,7 +204,8 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----
         function makespan = get.makespan(obj)
-            %Counting the number of columns to obtain the makespan
+            % get.makespan   Returns the makespan of the current schedule
+            
 %             makespan = size(obj.schedule,2);
             
 

@@ -1,25 +1,44 @@
 classdef JSSPMachine < handle
+    % JSSPMachine   Class for creating machine objects for the JSSP
+    %  This class creates the objects in which the JSSPActivity objects of
+    %  JSSPJob objects will be scheduled.
+    %
+    %   JSSPMachine Properties:
+    %      activities - Vector of JSSPActivity objects scheduled in this
+    %      machine object
+    %      jobList - 
+    %
+    %   JSSPMachine Dependent Properties:
+    %      emptyRangeInMachine - Returns matrix with empty slots within the machine
+    %      makespan % Returns current machine makespan (total time)
+    %   
+    %   All JSSPMachine Methods are for dependent properties.
     properties
         activities = JSSPActivity;
         jobList
     end
     
     properties (Dependent)
-        emptyRangeInMachine
-        makespan
+        emptyRangeInMachine % Returns matrix with empty slots within the machine
+        makespan % Returns current machine makespan (total time)
     end
     
     methods
         function obj = JSSPMachine()
-            % Empty on purpose
+            % JSSPMachine   Constructor 
             % Machine initializes to default values
+            
+            % Empty on purpose
         end
         
         function ranges = get.emptyRangeInMachine(obj)
+            % get.emptyRangeInMachine   Returns matrix with empty slots
+            % within the machine
             ranges = [0 sort([obj.activities(:).endTime]); sort([obj.activities(:).startTime]) obj.makespan];
         end
         
         function makespan = get.makespan(obj)
+            % get.makespan   Returns current machine makespan (total time)
             makespan = max([obj.activities.endTime]);
         end
     end
