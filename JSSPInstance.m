@@ -1,19 +1,45 @@
-% Class definition for creating instances of the JSSP
 classdef JSSPInstance < handle
-    % ----- ---------------------------------------------------- -----
-    %                       Properties
-    % ----- ---------------------------------------------------- -----
+    % JSSPInstance   Class definition for creating instances of the JSSP
+    %  Each object of this class represents a problem instance (set of jobs
+    %  that must be scheduled).
+    % 
+    %  JSSPInstance Properties:
+    %   nbJobs - Number of jobs within the instance
+    %   nbMachines - Number of machines associated with the instance
+    %   status - Instance status (text). Can be: Undefined (empty), Pending, Solved
+    %   instanceData - JSSPJob array with the original (unsolved) instance
+    %   pendingData - JSSPJob array with what remains of the instance
+    %   features - Vector with the current feature values of the instance
+    %   rawInstanceData - Hyper-matrix containing the raw data of the original (unsolved) instance
+    %   updatingData - Hyper-matrix with updated rawData, according to the activities that has been already scheduled
+    %   jobRegister - Vector with one element per job. Indicates the number
+    %   of activities that has been scheduled for each job.
+    % 
+    %  JSSPInstance Dependant Properties:
+    %   upcomingActivities - JSSPActivity array with the first activity from each job
+    %
+    %  JSSPInstance Methods:
+    %   JSSPInstance(instanceData) - Constructor
+    %   gettingFeatures(obj, varargin) - Method for calculating values of features 1:5
+    %   scheduleJob(obj, jobID) - Schedules the next (upcoming) activity of
+    %   the given job
+    %   reset(obj) - Resets the instance to the original (unsolved) state
+    %   plot(obj, varargin) - Plots the current solution (schedule) of the
+    %   instance
+    %   disp(obj, varargin) - Prints instance information    
+    %
+    
     properties
-        nbJobs
-        nbMachines
-        status = 'Undefined'; % Instance status. Can be: Undefined (empty), Pending, Solved
+        nbJobs % Number of jobs within the instance
+        nbMachines % Number of machines associated with the instance
+        status = 'Undefined'; % Instance status (text). Can be: Undefined (empty), Pending, Solved
         solution % JSSPSchedule object with the current solution
         instanceData = JSSPJob(); % JSSPJob array with the original instance
         pendingData = JSSPJob(); % JSSPJob array with what remains of the instance
-        features = [];        
-        rawInstanceData
-        updatingData
-        jobRegister
+        features = []; % Vector with the current feature values of the instance
+        updatingData % Hyper-matrix with updated rawData, according to the activities that has been already scheduled
+        jobRegister % Vector with one element per job. Indicates the number of activities that has been scheduled for each job.
+        rawInstanceData % Hyper-matrix containing the raw data of the original (unsolved) instance
     end
     
     properties (Dependent)
@@ -28,9 +54,12 @@ classdef JSSPInstance < handle
         % Constructor
         % ----- ---------------------------------------------------- -----
         function instance = JSSPInstance(instanceData)
-            % Function for creating the instance object
-            % instanceData: nbJobs*nbMachines*2 array. First layer:
-            % Processing times. Second layer: Machine sequence
+            % JSSPInstance Constructor for creating the instance object
+            %  - Inputs:
+            %     instanceData - nbJobs*nbMachines*2 array. First layer:
+            %     Processing times. Second layer: Machine sequence
+            %  - Outputs:
+            %      instance - The JSSPInstance object
             if nargin > 0
                 [instance.nbJobs, ~] = size(instanceData(:,:,1));
                 instance.nbMachines = max(max(instanceData(:,:,2)));
@@ -58,7 +87,13 @@ classdef JSSPInstance < handle
         % ----- ---------------------------------------------------- -----
         % Calculate Features
         % ----- ---------------------------------------------------- -----
-        function features=gettingFeatures(obj,varargin)
+        function features = gettingFeatures(obj,varargin)
+            % gettingFeatures   Method for calculating feature values
+            %  This method has variable input arguments, organized as
+            %  follows:
+            %   1 - Normalization flag for the features (defaults to false)
+            %  Returns a vector with five elements, corresponding to
+            %  values of the first five features
             if nargin>1 
                 toNormalize=varargin{1};
             else 
@@ -82,6 +117,10 @@ classdef JSSPInstance < handle
         % Job scheduler
         % ----- ---------------------------------------------------- -----
         function scheduleJob(obj, jobID)
+            % scheduleJob   Schedules the next (upcoming) activity of the given job
+            %  This method receives a job ID and schedules its next
+            %  activity. It does not return anything since the JSSPInstance object
+            %  itself is updated.
             obj.jobRegister(jobID)=obj.jobRegister(jobID)+1;
             obj.updatingData(jobID,obj.jobRegister(jobID),1)=0;
             obj.updatingData(jobID,obj.jobRegister(jobID),2)=0;
@@ -102,7 +141,7 @@ classdef JSSPInstance < handle
         % Instance reset
         % ----- ---------------------------------------------------- -----
         function reset(obj)
-%             [~, rawInstanceData] = createJSSPInstanceFromInstance(obj);
+            % reset   Resets the instance to the original (unsolved) state            
             for idx = 1 : obj.nbJobs                
                 obj.pendingData(idx) = ...
                     JSSPJob(obj.rawInstanceData(idx,:,2),obj.rawInstanceData(idx,:,1),idx);
@@ -113,17 +152,23 @@ classdef JSSPInstance < handle
             for i=1:size(obj.rawInstanceData(:,:,1),1)
                     obj.jobRegister(i)=0;
             end
+%             [~, rawInstanceData] = createJSSPInstanceFromInstance(obj);
         end
         
         % ----- ---------------------------------------------------- -----
         % Methods for overloading functionality
         % ----- ---------------------------------------------------- -----
         function plot(obj, varargin)
+            % plot   Plots the current solution (schedule) of the instance
             disp('Not yet fully implemented...')
             obj.solution.plot()
         end
         
         function disp(obj, varargin)
+            % disp    Prints instance information
+            % This method prints basic instance information, including the
+            % instance status and the raw instance data.
+            
 %             pTimes = nan(obj.nbJobs,obj.nbMachines);
 %             mOrder = pTimes;
 %             for idx = 1 : obj.nbJobs
@@ -143,6 +188,7 @@ classdef JSSPInstance < handle
         % Methods for dependent properties
         % ----- ---------------------------------------------------- -----
         function activities = get.upcomingActivities(obj)
+            % get.upcomingActivities   Updates the vector of activities that must be scheduled next for each job.
             if isempty(obj.pendingData(end).activities)
                 activities(obj.nbJobs) = JSSPActivity;
             else
