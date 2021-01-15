@@ -1,4 +1,4 @@
-classdef ruleBasedSelectionHH2 < ruleBasedSelectionHH
+classdef toDel_ruleBasedSelectionHH2 < ruleBasedSelectionHH
     % ----- ---------------------------------------------------- -----
     %                       Properties
     % ----- ---------------------------------------------------- -----

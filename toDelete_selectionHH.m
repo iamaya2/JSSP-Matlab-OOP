@@ -1,5 +1,5 @@
 % Class definition for selection hyper-heuristics
-classdef selectionHH < handle
+classdef toDel_selectionHH < handle
     % ----- ---------------------------------------------------- -----
     %                       Properties
     % ----- ---------------------------------------------------- -----

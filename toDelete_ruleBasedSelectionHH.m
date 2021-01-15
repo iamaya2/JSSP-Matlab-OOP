@@ -1,5 +1,5 @@
 % Class definition for Rule-based selection hyper-heuristics
-classdef ruleBasedSelectionHH < selectionHH
+classdef toDel_ruleBasedSelectionHH < selectionHH
     % ----- ---------------------------------------------------- -----
     %                       Properties
     % ----- ---------------------------------------------------- -----
