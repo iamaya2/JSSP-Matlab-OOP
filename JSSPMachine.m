@@ -31,6 +31,13 @@ classdef JSSPMachine < handle
             % Empty on purpose
         end
         
+        function newMachine = clone(obj)
+            % clone   Method for cloning a machine
+            newMachine = JSSPMachine();
+            newMachine.activities = obj.activities;
+            newMachine.jobList = obj.jobList;
+        end
+        
         function ranges = get.emptyRangeInMachine(obj)
             % get.emptyRangeInMachine   Returns matrix with empty slots
             % within the machine

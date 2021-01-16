@@ -55,6 +55,15 @@ classdef JSSPSchedule < handle  % Only one schedule should be around
         % ----- ---------------------------------------------------- -----
         % General methods
         % ----- ---------------------------------------------------- -----
+        function newSchedule = clone(obj)
+            % clone   Method for cloning the object so they are independent
+            newSchedule = JSSPSchedule(obj.nbMachines, obj.nbMaxJobs);
+            for idx = 1 : newSchedule.nbMachines
+                newSchedule.schedule(idx,1) = obj.schedule(idx,1).clone(); % Empty column of actitivities
+            end
+            newSchedule.schColorMap = obj.schColorMap;
+        end
+        
         %function timeIndex = getTimeslot(obj, machineID, activityLength)            
         function timeIndex = getTimeslot(obj, targetJob)            
             % getTimeslot   Seeks a valid time for slotting the job with the given ID

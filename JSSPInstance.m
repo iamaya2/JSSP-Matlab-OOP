@@ -80,6 +80,7 @@ classdef JSSPInstance < handle
                 for i=1:size(instanceData(:,:,1))
                     instance.jobRegister(i)=0;
                 end
+                instance.gettingFeatures(true); % Defines initial feature values
             end
         end
         
@@ -110,7 +111,7 @@ classdef JSSPInstance < handle
                 end
             end
             
-            obj.features=features
+            obj.features = features;
         end
         
         % ----- ---------------------------------------------------- -----
