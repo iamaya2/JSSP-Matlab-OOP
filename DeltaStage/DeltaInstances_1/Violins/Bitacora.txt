@@ -1,0 +1,13 @@
+Cada figura se realizó con la función de hypMatrixtoViolin_Advanced con los parámetros correspondientes. Por ejemplo para
+LPTvsAll: 
+
+Folder: "DeltaStage/DeltaInstances_1/DeltaMatrix"
+HeurID: 1
+Objective: 1 
+
+Los violines se crearon con los siguientes parámetros: 
+
+ CATEGORYNAMES = {"10" "20" "30" "40" "50"};
+ violinplot(hypMatrix_concat, CATEGORYNAMES,'ViolinColor',[1,0,0],'width', 0.3, 'violinalpha', 0.8, 'ShowData', false) 
+ xlabel("Target Delta")
+ ylabel("Quotient between obtained delta and target delta")
