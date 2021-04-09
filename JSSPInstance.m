@@ -129,6 +129,7 @@ classdef JSSPInstance < handle
             jts = obj.pendingData(jobID); % Job to schedule
             ts = obj.solution.getTimeslot(jts); % Timeslot
             obj.solution.scheduleJob(jts, ts);
+            obj.gettingFeatures(true); % toDo: Find a better update method
             for idx = 1 : length(obj.pendingData)
                 if ~isempty(obj.pendingData(idx).activities)
                     return
@@ -153,6 +154,7 @@ classdef JSSPInstance < handle
             for i=1:size(obj.rawInstanceData(:,:,1),1)
                     obj.jobRegister(i)=0;
             end
+            obj.gettingFeatures(true);
 %             [~, rawInstanceData] = createJSSPInstanceFromInstance(obj);
         end
         
